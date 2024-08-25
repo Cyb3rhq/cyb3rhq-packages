@@ -61,34 +61,34 @@ test-04-common_checkInstalled-all-installed-yum() {
 
     @mocktrue yum list installed
 
-    @mock grep wazuh-manager === @echo wazuh-manager.x86_64 5.0.0-1 @wazuh
+    @mock grep cyb3rhq-manager === @echo cyb3rhq-manager.x86_64 5.0.0-1 @cyb3rhq
     @mkdir /var/ossec
 
-    @mock grep wazuh-indexer === @echo wazuh-indexer.x86_64 1.13.2-1 @wazuh
-    @mkdir /var/lib/wazuh-indexer/
-    @mkdir /usr/share/wazuh-indexer
-    @mkdir /etc/wazuh-indexer
+    @mock grep cyb3rhq-indexer === @echo cyb3rhq-indexer.x86_64 1.13.2-1 @cyb3rhq
+    @mkdir /var/lib/cyb3rhq-indexer/
+    @mkdir /usr/share/cyb3rhq-indexer
+    @mkdir /etc/cyb3rhq-indexer
 
-    @mock grep filebeat === @echo filebeat.x86_64 7.10.2-1 @wazuh
+    @mock grep filebeat === @echo filebeat.x86_64 7.10.2-1 @cyb3rhq
     @mkdir /var/lib/filebeat/
     @mkdir /usr/share/filebeat
     @mkdir /etc/filebeat
 
-    @mock grep wazuh-dashboard === @echo wazuh-dashboard.x86_64
-    @mkdir /var/lib/wazuh-dashboard/
-    @mkdir /usr/share/wazuh-dashboard/
-    @mkdir /etc/wazuh-dashboard
+    @mock grep cyb3rhq-dashboard === @echo cyb3rhq-dashboard.x86_64
+    @mkdir /var/lib/cyb3rhq-dashboard/
+    @mkdir /usr/share/cyb3rhq-dashboard/
+    @mkdir /etc/cyb3rhq-dashboard
 
     common_checkInstalled
-    @echo $wazuh_installed
-    @echo $wazuh_remaining_files
+    @echo $cyb3rhq_installed
+    @echo $cyb3rhq_remaining_files
     @rmdir /var/ossec
 
     @echo $indexer_installed
     @echo $indexer_remaining_files
-    @rmdir /var/lib/wazuh-indexer/
-    @rmdir /usr/share/wazuh-indexer
-    @rmdir /etc/wazuh-indexer
+    @rmdir /var/lib/cyb3rhq-indexer/
+    @rmdir /usr/share/cyb3rhq-indexer
+    @rmdir /etc/cyb3rhq-indexer
 
     @echo $filebeat_installed
     @echo $filebeat_remaining_files
@@ -98,23 +98,23 @@ test-04-common_checkInstalled-all-installed-yum() {
 
     @echo $dashboard_installed
     @echo $dashboard_remaining_files
-    @rmdir /var/lib/wazuh-dashboard/
-    @rmdir /usr/share/wazuh-dashboard/
-    @rmdir /etc/wazuh-dashboard/
+    @rmdir /var/lib/cyb3rhq-dashboard/
+    @rmdir /usr/share/cyb3rhq-dashboard/
+    @rmdir /etc/cyb3rhq-dashboard/
 
 }
 
 test-05-common_checkInstalled-all-installed-yum-assert() {
-    @echo "wazuh-manager.x86_64 5.0.0-1 @wazuh"
+    @echo "cyb3rhq-manager.x86_64 5.0.0-1 @cyb3rhq"
     @echo 1
 
-    @echo "wazuh-indexer.x86_64 4.6.0-1 @wazuh"
+    @echo "cyb3rhq-indexer.x86_64 4.6.0-1 @cyb3rhq"
     @echo 1
 
-    @echo "filebeat.x86_64 7.10.2-1 @wazuh"
+    @echo "filebeat.x86_64 7.10.2-1 @cyb3rhq"
     @echo 1
 
-    @echo "wazuh-dashboard.x86_64"
+    @echo "cyb3rhq-dashboard.x86_64"
     @echo 1
 }
 
@@ -125,35 +125,35 @@ test-05-common_checkInstalled-all-installed-apt() {
 
     @mocktrue apt list --installed
 
-    @mock grep wazuh-manager === @echo wazuh-manager/now 4.2.5-1 amd64 [installed,local]
+    @mock grep cyb3rhq-manager === @echo cyb3rhq-manager/now 4.2.5-1 amd64 [installed,local]
     @mkdir /var/ossec
 
-    @mock grep wazuh-indexer === @echo wazuh-indexer/stable,now 1.13.2-1 amd64 [installed]
+    @mock grep cyb3rhq-indexer === @echo cyb3rhq-indexer/stable,now 1.13.2-1 amd64 [installed]
 
-    @mkdir /var/lib/wazuh-indexer/
-    @mkdir /usr/share/wazuh-indexer
-    @mkdir /etc/wazuh-indexer
+    @mkdir /var/lib/cyb3rhq-indexer/
+    @mkdir /usr/share/cyb3rhq-indexer
+    @mkdir /etc/cyb3rhq-indexer
 
     @mock grep filebeat === @echo filebeat/now 7.10.2 amd64 [installed,local]
     @mkdir /var/lib/filebeat/
     @mkdir /usr/share/filebeat
     @mkdir /etc/filebeat
 
-    @mock grep wazuh-dashboard === @echo wazuh-dashboard/now 1.13.2 amd64 [installed,local]
-    @mkdir /var/lib/wazuh-dashboard/
-    @mkdir /usr/share/wazuh-dashboard/
-    @mkdir /etc/wazuh-dashboard
+    @mock grep cyb3rhq-dashboard === @echo cyb3rhq-dashboard/now 1.13.2 amd64 [installed,local]
+    @mkdir /var/lib/cyb3rhq-dashboard/
+    @mkdir /usr/share/cyb3rhq-dashboard/
+    @mkdir /etc/cyb3rhq-dashboard
 
     common_checkInstalled
-    @echo $wazuh_installed
-    @echo $wazuh_remaining_files
+    @echo $cyb3rhq_installed
+    @echo $cyb3rhq_remaining_files
     @rmdir /var/ossec
 
     @echo $indexer_installed
     @echo $indexer_remaining_files
-    @rmdir /var/lib/wazuh-indexer/
-    @rmdir /usr/share/wazuh-indexer
-    @rmdir /etc/wazuh-indexer
+    @rmdir /var/lib/cyb3rhq-indexer/
+    @rmdir /usr/share/cyb3rhq-indexer
+    @rmdir /etc/cyb3rhq-indexer
 
     @echo $filebeat_installed
     @echo $filebeat_remaining_files
@@ -163,23 +163,23 @@ test-05-common_checkInstalled-all-installed-apt() {
 
     @echo $dashboard_installed
     @echo $dashboard_remaining_files
-    @rmdir /var/lib/wazuh-dashboard/
-    @rmdir /usr/share/wazuh-dashboard/
-    @rmdir /etc/wazuh-dashboard/
+    @rmdir /var/lib/cyb3rhq-dashboard/
+    @rmdir /usr/share/cyb3rhq-dashboard/
+    @rmdir /etc/cyb3rhq-dashboard/
 
 }
 
 test-05-common_checkInstalled-all-installed-apt-assert() {
-    @echo "wazuh-manager/now 4.2.5-1 amd64 [installed,local]"
+    @echo "cyb3rhq-manager/now 4.2.5-1 amd64 [installed,local]"
     @echo 1
 
-    @echo "wazuh-indexer/stable,now 1.13.2-1 amd64 [installed]"
+    @echo "cyb3rhq-indexer/stable,now 1.13.2-1 amd64 [installed]"
     @echo 1
 
     @echo "filebeat/now 7.10.2 amd64 [installed,local]"
     @echo 1
 
-    @echo "wazuh-dashboard/now 1.13.2 amd64 [installed,local]"
+    @echo "cyb3rhq-dashboard/now 1.13.2 amd64 [installed,local]"
     @echo 1
 }
 
@@ -189,18 +189,18 @@ test-06-common_checkInstalled-nothing-installed-apt() {
 
     @mocktrue apt list --installed
 
-    @mock grep wazuh-manager
+    @mock grep cyb3rhq-manager
 
-    @mock grep wazuh-indexer
+    @mock grep cyb3rhq-indexer
 
 
     @mock grep filebeat
 
-    @mock grep wazuh-dashboard
+    @mock grep cyb3rhq-dashboard
 
     common_checkInstalled
-    @echo $wazuh_installed
-    @echo $wazuh_remaining_files
+    @echo $cyb3rhq_installed
+    @echo $cyb3rhq_remaining_files
 
     @echo $indexer_installed
     @echo $indexer_remaining_files
@@ -232,18 +232,18 @@ test-07-common_checkInstalled-nothing-installed-yum() {
 
     @mocktrue yum list installed
 
-    @mock grep wazuh-manager
+    @mock grep cyb3rhq-manager
 
-    @mock grep wazuh-indexer
+    @mock grep cyb3rhq-indexer
 
 
     @mock grep filebeat
 
-    @mock grep wazuh-dashboard
+    @mock grep cyb3rhq-dashboard
 
     common_checkInstalled
-    @echo $wazuh_installed
-    @echo $wazuh_remaining_files
+    @echo $cyb3rhq_installed
+    @echo $cyb3rhq_remaining_files
 
     @echo $indexer_installed
     @echo $indexer_remaining_files

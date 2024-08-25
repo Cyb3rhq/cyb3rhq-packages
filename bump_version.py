@@ -1,6 +1,6 @@
 """
-This script is used to bump the version of the Wazuh packages repository.
-    Copyright (C) 2015-2020, Wazuh Inc.
+This script is used to bump the version of the Cyb3rhq packages repository.
+    Copyright (C) 2015-2020, Cyb3rhq Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -59,9 +59,9 @@ spec_files_dict = {
         f"{version.micro}.html")}
 
 copyright_files_dict = {
-    (r'Wazuh, Inc <info@wazuh.com> on '
+    (r'Cyb3rhq, Inc <info@wazuh.com> on '
      r'(\w+),\s(\d+)\s(\w+)\s(\d+)\s(\d+):(\d+):(\d+)\s\+(\d+)'):
-     f"Wazuh, Inc <info@wazuh.com> on {deb_changelog_date}"}
+     f"Cyb3rhq, Inc <info@wazuh.com> on {deb_changelog_date}"}
 
 pkginfo_files_dict = {
     r'VERSION=\"(\d+\.\d+\.\d+)\"':f'VERSION=\"{version}\"',
@@ -70,27 +70,27 @@ pkginfo_files_dict = {
 pkgproj_files_dict = {
     r'<string>(\d+\.\d+\.\d+)-(\d+)</string>':
     f'<string>{version}-{args.revision}</string>',
-    r'<string>wazuh-agent-(\d+\.\d+\.\d+)-(\d+)':
-    f'<string>wazuh-agent-{version}-{args.revision}'}
+    r'<string>cyb3rhq-agent-(\d+\.\d+\.\d+)-(\d+)':
+    f'<string>cyb3rhq-agent-{version}-{args.revision}'}
 
 test_files_dict = {
-    r'wazuh-manager.x86_64\s+(\d+\.\d+\.\d+)-(\d+)':
-    f'wazuh-manager.x86_64 {version}-{args.revision}',
-    r'wazuh_version=\"(\d+\.\d+\.\d+)\"':
-    f'wazuh_version=\"{version}\"'}
+    r'cyb3rhq-manager.x86_64\s+(\d+\.\d+\.\d+)-(\d+)':
+    f'cyb3rhq-manager.x86_64 {version}-{args.revision}',
+    r'cyb3rhq_version=\"(\d+\.\d+\.\d+)\"':
+    f'cyb3rhq_version=\"{version}\"'}
 
 install_variables_files_dict = {
-    r'wazuh_major=\"(\d+\.\d+)\"':
-    f'wazuh_major=\"{version.major}.{version.minor}\"',
-    r'wazuh_version=\"(\d+\.\d+\.\d+)\"':f'wazuh_version=\"{version}\"'}
+    r'cyb3rhq_major=\"(\d+\.\d+)\"':
+    f'cyb3rhq_major=\"{version.major}.{version.minor}\"',
+    r'cyb3rhq_version=\"(\d+\.\d+\.\d+)\"':f'cyb3rhq_version=\"{version}\"'}
 
 changelog_md_files_dict = {
     (r'All notable changes to this project '
     r'will be documented in this file.'):
     (r'All notable changes to this project '
     r'will be documented in this file.') + '\n'  
-    + (f"## [{version}]\n\n- https://github.com/wazuh/"
-    f"wazuh-packages/releases/tag/v{version}\n")}
+    + (f"## [{version}]\n\n- https://github.com/cyb3rhq/"
+    f"cyb3rhq-packages/releases/tag/v{version}\n")}
 
 builder_files_dict = {
     r'source_branch=\"(\d+\.\d+\.\d+)\"': f'source_branch=\"{version}\"'}
@@ -125,13 +125,13 @@ for changelog_file in changelog_files:
     with open(changelog_file, 'r', encoding="utf-8") as file:
         print('Bumping version in ' + changelog_file)
         filedata=file.read()
-        install_type=re.search(r'(wazuh-(agent|manager|indexer|dashboard))',
+        install_type=re.search(r'(cyb3rhq-(agent|manager|indexer|dashboard))',
                                filedata).group(1)
         changelog_string=(f"{install_type} ({version}-RELEASE) stable; "
             "urgency=low\n\n  * More info: https://documentation.wazuh.com/"
             f"current/release-notes/release-{version.major}-{version.minor}-"
             f"{version.micro}.html\n\n -- "
-            f"Wazuh, Inc <info@wazuh.com>  {deb_changelog_date}\n\n")
+            f"Cyb3rhq, Inc <info@wazuh.com>  {deb_changelog_date}\n\n")
         # Add new version to changelog
         filedata=changelog_string + filedata
 

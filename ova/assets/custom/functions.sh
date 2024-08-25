@@ -1,9 +1,9 @@
 function installCommon_changePasswords() {
 
-    common_logger -d "Setting Wazuh indexer cluster passwords."
+    common_logger -d "Setting Cyb3rhq indexer cluster passwords."
     if [ -f "${tar_file}" ]; then
-        eval "tar -xf ${tar_file} -C /tmp wazuh-install-files/wazuh-passwords.txt ${debug}"
-        p_file="/tmp/wazuh-install-files/wazuh-passwords.txt"
+        eval "tar -xf ${tar_file} -C /tmp cyb3rhq-install-files/cyb3rhq-passwords.txt ${debug}"
+        p_file="/tmp/cyb3rhq-install-files/cyb3rhq-passwords.txt"
         common_checkInstalled
         if [ -n "${start_indexer_cluster}" ] || [ -n "${AIO}" ]; then
             changeall=1

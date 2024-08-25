@@ -1,7 +1,7 @@
 #!/bin/sh
 
 DEBUG=$1
-WAZUH_VERSION=$2
+CYB3RHQ_VERSION=$2
 SYSTEM_USER=$3
 
 [[ ${DEBUG} = "yes" ]] && set -ex || set -e
@@ -9,11 +9,11 @@ SYSTEM_USER=$3
 # OVA Welcome message
 cat > /etc/issue <<EOF
 
-Welcome to the Wazuh OVA version
-Wazuh - ${WAZUH_VERSION}
+Welcome to the Cyb3rhq OVA version
+Cyb3rhq - ${CYB3RHQ_VERSION}
 Login credentials:
   User: ${SYSTEM_USER}
-  Password: wazuh
+  Password: cyb3rhq
 
 EOF
 
@@ -43,7 +43,7 @@ wwwwwww.          wwwwwww.          wwwwwww.
          wwwwww.            wwwwww.         oooooo
 
 
-         WAZUH Open Source Security Platform
+         CYB3RHQ Open Source Security Platform
                   https://wazuh.com
 
 

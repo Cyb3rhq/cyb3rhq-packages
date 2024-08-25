@@ -1,0 +1,28 @@
+nodes:
+  # Cyb3rhq indexer nodes
+  indexer:
+    - name: indexer-1
+      ip: "<indexer-node-ip>"
+    #- name: indexer-2
+    #  ip: "<indexer-node-ip>"
+    #- name: indexer-3
+    #  ip: "<indexer-node-ip>"
+
+  # Cyb3rhq server nodes
+  # If there is more than one Cyb3rhq server
+  # node, each one must have a node_type
+  server:
+    - name: server-1
+      ip: "<server-node-ip>"
+    #  node_type: master
+    #- name: server-2
+    #  ip: "<server-node-ip>"
+    #  node_type: worker
+    #- name: server-3
+    #  ip: "<server-node-ip>"
+    #  node_type: worker
+
+  # Cyb3rhq dashboard nodes
+  dashboard:
+    - name: dashboard
+      ip: "<dashboard-node-ip>"

@@ -1,0 +1,21 @@
+#!/bin/sh
+
+# add something which happens after deinstall
+
+directory_base="DIRECTORY_BASE"
+
+# Remove the cyb3rhq user if it exists
+if id -u cyb3rhq > /dev/null 2>&1; then
+  deluser cyb3rhq > /dev/null 2>&1
+fi
+# Remove the cyb3rhq group if it exists
+if command -v getent > /dev/null 2>&1 && getent group cyb3rhq > /dev/null 2>&1; then
+  delgroup cyb3rhq > /dev/null 2>&1
+elif id -g cyb3rhq > /dev/null 2>&1; then
+  delgroup cyb3rhq > /dev/null 2>&1
+fi
+
+# Remove lingering folders and files
+rm -rf ${directory_base}
+
+exit 0

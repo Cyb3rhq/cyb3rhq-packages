@@ -1,0 +1,9 @@
+cyb3rhq-manager: embedded-library
+cyb3rhq-manager: embedded-zlib
+cyb3rhq-manager: possible-gpl-code-linked-with-openssl
+cyb3rhq-manager: new-package-should-close-itp-bug
+cyb3rhq-manager: possibly-insecure-handling-of-tmp-files-in-maintainer-script
+cyb3rhq-manager: non-standard-dir-in-var
+cyb3rhq-manager: file-in-unusual-dir
+cyb3rhq-manager: hardening-no-fortify-functions
+cyb3rhq-manager: hardening-no-relro

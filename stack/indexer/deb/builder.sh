@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Wazuh indexer builder
-# Copyright (C) 2021, Wazuh Inc.
+# Cyb3rhq indexer builder
+# Copyright (C) 2021, Cyb3rhq Inc.
 #
 # This program is a free software; you can redistribute it
 # and/or modify it under the terms of the GNU General Public
@@ -11,12 +11,12 @@
 set -e
 
 # Script parameters to build the package
-target="wazuh-indexer"
+target="cyb3rhq-indexer"
 architecture=$1
 revision=$2
 future=$3
 reference=$4
-directory_base="/usr/share/wazuh-indexer"
+directory_base="/usr/share/cyb3rhq-indexer"
 
 if [ -z "${revision}" ]; then
     revision="1"
@@ -26,7 +26,7 @@ if [ "${future}" = "yes" ];then
     version="99.99.0"
 else
     if [ "${reference}" ];then
-        version=$(curl -sL https://raw.githubusercontent.com/wazuh/wazuh-packages/${reference}/VERSION | cat)
+        version=$(curl -sL https://raw.githubusercontent.com/cyb3rhq/cyb3rhq-packages/${reference}/VERSION | cat)
     else
         version=$(cat /root/VERSION)
     fi
@@ -42,9 +42,9 @@ mkdir -p ${source_dir}/debian
 
 # Including spec file
 if [ "${reference}" ];then
-    curl -sL https://github.com/wazuh/wazuh-packages/tarball/${reference} | tar zx
-    cp -r ./wazuh*/stack/indexer/deb/debian/* ${source_dir}/debian/
-    cp -r ./wazuh*/* /root/
+    curl -sL https://github.com/cyb3rhq/cyb3rhq-packages/tarball/${reference} | tar zx
+    cp -r ./cyb3rhq*/stack/indexer/deb/debian/* ${source_dir}/debian/
+    cp -r ./cyb3rhq*/* /root/
 else
     cp -r /root/stack/indexer/deb/debian/* ${source_dir}/debian/
 fi

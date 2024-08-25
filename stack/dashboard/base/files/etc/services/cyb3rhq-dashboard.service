@@ -1,0 +1,15 @@
+[Unit]
+Description=cyb3rhq-dashboard
+
+[Service]
+Type=simple
+User=cyb3rhq-dashboard
+Group=cyb3rhq-dashboard
+EnvironmentFile=-/etc/default/cyb3rhq-dashboard
+EnvironmentFile=-/etc/sysconfig/cyb3rhq-dashboard
+ExecStart=/usr/share/cyb3rhq-dashboard/bin/opensearch-dashboards
+WorkingDirectory=/usr/share/cyb3rhq-dashboard
+
+[Install]
+WantedBy=multi-user.target
+

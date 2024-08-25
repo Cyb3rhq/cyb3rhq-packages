@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Wazuh package builder
-# Copyright (C) 2015, Wazuh Inc.
+# Cyb3rhq package builder
+# Copyright (C) 2015, Cyb3rhq Inc.
 #
 # This program is a free software; you can redistribute it
 # and/or modify it under the terms of the GNU General Public
@@ -11,20 +11,20 @@
 set -ex
 # Optional package release
 build_target=$1
-wazuh_branch=$2
+cyb3rhq_branch=$2
 architecture_target=$3
 threads=$4
 package_release=$5
 directory_base=$6
 debug=$7
 checksum=$8
-wazuh_packages_branch=$9
+cyb3rhq_packages_branch=$9
 use_local_specs=${10}
 src=${11}
 legacy=${12}
 local_source_code=${13}
 future=${14}
-wazuh_version=""
+cyb3rhq_version=""
 rpmbuild="rpmbuild"
 
 disable_debug_flag='%debug_package %{nil}'
@@ -39,20 +39,20 @@ fi
 
 if [ ${build_target} = "api" ]; then
     if [ "${local_source_code}" = "no" ]; then
-        curl -sL https://github.com/wazuh/wazuh-api/tarball/${wazuh_branch} | tar zx
+        curl -sL https://github.com/cyb3rhq/cyb3rhq-api/tarball/${cyb3rhq_branch} | tar zx
     fi
-    wazuh_version="$(grep version wazuh*/package.json | cut -d '"' -f 4)"
+    cyb3rhq_version="$(grep version cyb3rhq*/package.json | cut -d '"' -f 4)"
 else
     if [ "${local_source_code}" = "no" ]; then
-        curl -sL https://github.com/wazuh/wazuh/tarball/${wazuh_branch} | tar zx
+        curl -sL https://github.com/cyb3rhq/cyb3rhq/tarball/${cyb3rhq_branch} | tar zx
     fi
-    wazuh_version="$(cat wazuh*/src/VERSION | cut -d 'v' -f 2)"
+    cyb3rhq_version="$(cat cyb3rhq*/src/VERSION | cut -d 'v' -f 2)"
 fi
 
 # Build directories
-build_dir=/build_wazuh
+build_dir=/build_cyb3rhq
 rpm_build_dir=${build_dir}/rpmbuild
-file_name="wazuh-${build_target}-${wazuh_version}-${package_release}"
+file_name="cyb3rhq-${build_target}-${cyb3rhq_version}-${package_release}"
 rpm_file="${file_name}.${architecture_target}.rpm"
 src_file="${file_name}.src.rpm"
 pkg_path="${rpm_build_dir}/RPMS/${architecture_target}"
@@ -62,8 +62,8 @@ ssl_flag=""
 mkdir -p ${rpm_build_dir}/{BUILD,BUILDROOT,RPMS,SOURCES,SPECS,SRPMS}
 
 # Prepare the sources directory to build the source tar.gz
-package_name=wazuh-${build_target}-${wazuh_version}
-cp -R wazuh-* ${build_dir}/${package_name}
+package_name=cyb3rhq-${build_target}-${cyb3rhq_version}
+cp -R cyb3rhq-* ${build_dir}/${package_name}
 
 # Including spec file
 if [ "${use_local_specs}" = "no" ]; then
@@ -72,32 +72,32 @@ if [ "${use_local_specs}" = "no" ]; then
     if [ "${legacy}" = "yes" ]; then
         ssl_flag+="-k"
     fi
-    curl -L "https://raw.githubusercontent.com/wazuh/wazuh-packages/${wazuh_packages_branch}/rpms/SPECS/wazuh-${build_target}.spec" -o "${specs_path}/wazuh-${build_target}.spec" ${ssl_flag}
+    curl -L "https://raw.githubusercontent.com/cyb3rhq/cyb3rhq-packages/${cyb3rhq_packages_branch}/rpms/SPECS/cyb3rhq-${build_target}.spec" -o "${specs_path}/cyb3rhq-${build_target}.spec" ${ssl_flag}
 else
     specs_path="/specs"
 fi
 
 if [[ "${future}" == "yes" ]]; then
     # MODIFY VARIABLES
-    base_version=$wazuh_version
+    base_version=$cyb3rhq_version
     MAJOR=$(echo $base_version | cut -dv -f2 | cut -d. -f1)
     MINOR=$(echo $base_version | cut -d. -f2)
-    wazuh_version="${MAJOR}.30.0"
-    file_name="wazuh-${build_target}-${wazuh_version}-${package_release}"
-    old_name="wazuh-${build_target}-${base_version}-${package_release}"
-    package_name=wazuh-${build_target}-${wazuh_version}
-    old_package_name=wazuh-${build_target}-${base_version}
+    cyb3rhq_version="${MAJOR}.30.0"
+    file_name="cyb3rhq-${build_target}-${cyb3rhq_version}-${package_release}"
+    old_name="cyb3rhq-${build_target}-${base_version}-${package_release}"
+    package_name=cyb3rhq-${build_target}-${cyb3rhq_version}
+    old_package_name=cyb3rhq-${build_target}-${base_version}
 
     # PREPARE FUTURE SPECS AND SOURCES
     mv "${build_dir}/${old_package_name}" "${build_dir}/${package_name}"
-    find "${build_dir}/${package_name}" "${specs_path}/" \( -name "*VERSION*" -o -name "*.spec" \) -exec sed -i "s/${base_version}/${wazuh_version}/g" {} \;
+    find "${build_dir}/${package_name}" "${specs_path}/" \( -name "*VERSION*" -o -name "*.spec" \) -exec sed -i "s/${base_version}/${cyb3rhq_version}/g" {} \;
     sed -i "s/\$(VERSION)/${MAJOR}.${MINOR}/g" "${build_dir}/${package_name}/src/Makefile"
-    sed -i "s/${base_version}/${wazuh_version}/g" "${build_dir}/${package_name}/src/init/wazuh-server.sh"
-    sed -i "s/${base_version}/${wazuh_version}/g" "${build_dir}/${package_name}/src/init/wazuh-client.sh"
-    sed -i "s/${base_version}/${wazuh_version}/g" "${build_dir}/${package_name}/src/init/wazuh-local.sh"
+    sed -i "s/${base_version}/${cyb3rhq_version}/g" "${build_dir}/${package_name}/src/init/cyb3rhq-server.sh"
+    sed -i "s/${base_version}/${cyb3rhq_version}/g" "${build_dir}/${package_name}/src/init/cyb3rhq-client.sh"
+    sed -i "s/${base_version}/${cyb3rhq_version}/g" "${build_dir}/${package_name}/src/init/cyb3rhq-local.sh"
 fi
 
-cp ${specs_path}/wazuh-${build_target}.spec ${rpm_build_dir}/SPECS/${package_name}.spec
+cp ${specs_path}/cyb3rhq-${build_target}.spec ${rpm_build_dir}/SPECS/${package_name}.spec
 
 # Generating source tar.gz
 cd ${build_dir} && tar czf "${rpm_build_dir}/SOURCES/${package_name}.tar.gz" "${package_name}"
@@ -142,4 +142,4 @@ if [[ "${src}" == "yes" ]]; then
     extract_path="${rpm_build_dir}"
 fi
 
-find ${extract_path} -maxdepth 3 -type f -name "${file_name}*" -exec mv {} /var/local/wazuh \;
+find ${extract_path} -maxdepth 3 -type f -name "${file_name}*" -exec mv {} /var/local/cyb3rhq \;

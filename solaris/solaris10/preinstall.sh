@@ -1,6 +1,6 @@
 #!/bin/sh
-# preinstall script for wazuh-agent
-# Wazuh, Inc 2015
+# preinstall script for cyb3rhq-agent
+# Cyb3rhq, Inc 2015
 
 if [ ! -f /etc/ossec-init.conf ]; then
     DIR="/var/ossec"
@@ -18,9 +18,9 @@ else
     type=upgrade
 fi
 
-USER="wazuh"
-GROUP="wazuh"
-OSSEC_HIDS_TMP_DIR="/tmp/wazuh-agent"
+USER="cyb3rhq"
+GROUP="cyb3rhq"
+OSSEC_HIDS_TMP_DIR="/tmp/cyb3rhq-agent"
 OSMYSHELL="/sbin/nologin"
 
 # environment configuration
@@ -34,12 +34,12 @@ if [ ! -f ${OSMYSHELL} ]; then
     fi
 fi
 
-getent group wazuh > /dev/null 2>&1
+getent group cyb3rhq > /dev/null 2>&1
 if [ "$?" -ne 0 ]; then
     groupadd ${GROUP}
 fi
 
-getent passwd wazuh > /dev/null 2>&1
+getent passwd cyb3rhq > /dev/null 2>&1
 if [ "$?" -ne 0 ]; then
     useradd -d ${DIR} -s ${OSMYSHELL} -g ${GROUP} ${USER} > /dev/null 2>&1
 fi
@@ -59,8 +59,8 @@ case $type in
         fi
     fi
     # Delete old service
-    if [ -f /etc/init.d/wazuh-agent ]; then
-        rm /etc/init.d/wazuh-agent
+    if [ -f /etc/init.d/cyb3rhq-agent ]; then
+        rm /etc/init.d/cyb3rhq-agent
     fi
     # back up the current user rules
     if [ -f ${DIR}/etc/client.keys ]; then

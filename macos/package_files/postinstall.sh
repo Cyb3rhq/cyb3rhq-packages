@@ -8,26 +8,26 @@
 #  starting at 600 puts this in user space
 # -Added lines to append the ossec users to the group ossec
 #  so the the list GroupMembership works properly
-GROUP="wazuh"
-USER="wazuh"
+GROUP="cyb3rhq"
+USER="cyb3rhq"
 DIR="/Library/Ossec"
 INSTALLATION_SCRIPTS_DIR="${DIR}/packages_files/agent_installation_scripts"
 SCA_BASE_DIR="${INSTALLATION_SCRIPTS_DIR}/sca"
 
-if [ -f "${DIR}/WAZUH_PKG_UPGRADE" ]; then
+if [ -f "${DIR}/CYB3RHQ_PKG_UPGRADE" ]; then
   upgrade="true"
 fi
 
-if [ -f "${DIR}/WAZUH_PKG_UPGRADE" ]; then
-  rm -f ${DIR}/WAZUH_PKG_UPGRADE
+if [ -f "${DIR}/CYB3RHQ_PKG_UPGRADE" ]; then
+  rm -f ${DIR}/CYB3RHQ_PKG_UPGRADE
 fi
 
-if [ -f "${DIR}/WAZUH_RESTART" ]; then
+if [ -f "${DIR}/CYB3RHQ_RESTART" ]; then
   restart="true"
 fi
 
-if [ -f "${DIR}/WAZUH_RESTART" ]; then
-  rm -f ${DIR}/WAZUH_RESTART
+if [ -f "${DIR}/CYB3RHQ_RESTART" ]; then
+  rm -f ${DIR}/CYB3RHQ_RESTART
 fi
 
 if [ -n "${upgrade}" ]; then
@@ -87,7 +87,7 @@ chown -R root:${GROUP} ${DIR}/var
 
 if [ -z "${upgrade}" ]; then
     ${INSTALLATION_SCRIPTS_DIR}/gen_ossec.sh conf agent ${DIST_NAME} ${DIST_VER}.${DIST_SUBVER} ${DIR} > ${DIR}/etc/ossec.conf
-    chown root:wazuh ${DIR}/etc/ossec.conf
+    chown root:cyb3rhq ${DIR}/etc/ossec.conf
     chmod 0640 ${DIR}/etc/ossec.conf
 fi
 
@@ -118,7 +118,7 @@ if [ -r ${SCA_TMP_FILE} ]; then
     done
 fi
 
-# Register and configure agent if Wazuh environment variables are defined
+# Register and configure agent if Cyb3rhq environment variables are defined
 if [ -z "${upgrade}" ]; then
   ${INSTALLATION_SCRIPTS_DIR}/src/init/register_configure_agent.sh ${DIR} > /dev/null || :
 fi
@@ -137,9 +137,9 @@ rm -rf ${DIR}/packages_files
 # Remove old ossec user and group if exists and change ownwership of files
 
 if [[ $(dscl . -read /Groups/ossec) ]]; then
-  find ${DIR}/ -group ossec -user root -exec chown root:wazuh {} \ > /dev/null 2>&1 || true
+  find ${DIR}/ -group ossec -user root -exec chown root:cyb3rhq {} \ > /dev/null 2>&1 || true
   if [[ $(dscl . -read /Users/ossec) ]]; then
-    find ${DIR}/ -group ossec -user ossec -exec chown wazuh:wazuh {} \ > /dev/null 2>&1 || true
+    find ${DIR}/ -group ossec -user ossec -exec chown cyb3rhq:cyb3rhq {} \ > /dev/null 2>&1 || true
     sudo /usr/bin/dscl . -delete "/Users/ossec"
   fi
   sudo /usr/bin/dscl . -delete "/Groups/ossec"
@@ -151,5 +151,5 @@ if [ -f ${DIR}/queue/alerts/sockets ]; then
 fi
 
 if [ -n "${upgrade}" ] && [ -n "${restart}" ]; then
-    ${DIR}/bin/wazuh-control restart
+    ${DIR}/bin/cyb3rhq-control restart
 fi

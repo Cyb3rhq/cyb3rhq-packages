@@ -1,5 +1,5 @@
-# Wazuh installer - common.sh functions.
-# Copyright (C) 2015, Wazuh Inc.
+# Cyb3rhq installer - common.sh functions.
+# Copyright (C) 2015, Cyb3rhq Inc.
 #
 # This program is a free software; you can redistribute it
 # and/or modify it under the terms of the GNU General Public
@@ -44,46 +44,46 @@ function installCommon_cleanExit() {
 
 }
 
-function installCommon_addWazuhRepo() {
+function installCommon_addCyb3rhqRepo() {
 
-    common_logger -d "Adding the Wazuh repository."
+    common_logger -d "Adding the Cyb3rhq repository."
 
     if [ -n "${development}" ]; then
         if [ "${sys_type}" == "yum" ]; then
-            eval "rm -f /etc/yum.repos.d/wazuh.repo ${debug}"
+            eval "rm -f /etc/yum.repos.d/cyb3rhq.repo ${debug}"
         elif [ "${sys_type}" == "apt-get" ]; then
-            eval "rm -f /etc/apt/sources.list.d/wazuh.list ${debug}"
+            eval "rm -f /etc/apt/sources.list.d/cyb3rhq.list ${debug}"
         fi
     fi
 
-    if [ ! -f "/etc/yum.repos.d/wazuh.repo" ] && [ ! -f "/etc/zypp/repos.d/wazuh.repo" ] && [ ! -f "/etc/apt/sources.list.d/wazuh.list" ] ; then
+    if [ ! -f "/etc/yum.repos.d/cyb3rhq.repo" ] && [ ! -f "/etc/zypp/repos.d/cyb3rhq.repo" ] && [ ! -f "/etc/apt/sources.list.d/cyb3rhq.list" ] ; then
         if [ "${sys_type}" == "yum" ]; then
             eval "rpm --import ${repogpg} ${debug}"
             if [ "${PIPESTATUS[0]}" != 0 ]; then
-                common_logger -e "Cannot import Wazuh GPG key"
+                common_logger -e "Cannot import Cyb3rhq GPG key"
                 exit 1
             fi
-            eval "(echo -e '[wazuh]\ngpgcheck=1\ngpgkey=${repogpg}\nenabled=1\nname=EL-\${releasever} - Wazuh\nbaseurl='${repobaseurl}'/yum/\nprotect=1' | tee /etc/yum.repos.d/wazuh.repo)" "${debug}"
-            eval "chmod 644 /etc/yum.repos.d/wazuh.repo ${debug}"
+            eval "(echo -e '[cyb3rhq]\ngpgcheck=1\ngpgkey=${repogpg}\nenabled=1\nname=EL-\${releasever} - Cyb3rhq\nbaseurl='${repobaseurl}'/yum/\nprotect=1' | tee /etc/yum.repos.d/cyb3rhq.repo)" "${debug}"
+            eval "chmod 644 /etc/yum.repos.d/cyb3rhq.repo ${debug}"
         elif [ "${sys_type}" == "apt-get" ]; then
-            eval "common_curl -s ${repogpg} --max-time 300 --retry 5 --retry-delay 5 --fail | gpg --no-default-keyring --keyring gnupg-ring:/usr/share/keyrings/wazuh.gpg --import - ${debug}"
+            eval "common_curl -s ${repogpg} --max-time 300 --retry 5 --retry-delay 5 --fail | gpg --no-default-keyring --keyring gnupg-ring:/usr/share/keyrings/cyb3rhq.gpg --import - ${debug}"
             if [ "${PIPESTATUS[0]}" != 0 ]; then
-                common_logger -e "Cannot import Wazuh GPG key"
+                common_logger -e "Cannot import Cyb3rhq GPG key"
                 exit 1
             fi
-            eval "chmod 644 /usr/share/keyrings/wazuh.gpg ${debug}"
-            eval "(echo \"deb [signed-by=/usr/share/keyrings/wazuh.gpg] ${repobaseurl}/apt/ ${reporelease} main\" | tee /etc/apt/sources.list.d/wazuh.list)" "${debug}"
+            eval "chmod 644 /usr/share/keyrings/cyb3rhq.gpg ${debug}"
+            eval "(echo \"deb [signed-by=/usr/share/keyrings/cyb3rhq.gpg] ${repobaseurl}/apt/ ${reporelease} main\" | tee /etc/apt/sources.list.d/cyb3rhq.list)" "${debug}"
             eval "apt-get update -q ${debug}"
-            eval "chmod 644 /etc/apt/sources.list.d/wazuh.list ${debug}"
+            eval "chmod 644 /etc/apt/sources.list.d/cyb3rhq.list ${debug}"
         fi
     else
-        common_logger -d "Wazuh repository already exists. Skipping addition."
+        common_logger -d "Cyb3rhq repository already exists. Skipping addition."
     fi
 
     if [ -n "${development}" ]; then
-        common_logger "Wazuh development repository added."
+        common_logger "Cyb3rhq development repository added."
     else
-        common_logger "Wazuh repository added."
+        common_logger "Cyb3rhq repository added."
     fi
 }
 
@@ -122,33 +122,33 @@ function installCommon_changePasswordApi() {
     #Change API password tool
     if [ -n "${changeall}" ]; then
         for i in "${!api_passwords[@]}"; do
-            if [ -n "${wazuh}" ] || [ -n "${AIO}" ]; then
+            if [ -n "${cyb3rhq}" ] || [ -n "${AIO}" ]; then
                 passwords_getApiUserId "${api_users[i]}"
-                WAZUH_PASS_API='{\"password\":\"'"${api_passwords[i]}"'\"}'
-                eval 'common_curl -s -k -X PUT -H \"Authorization: Bearer $TOKEN_API\" -H \"Content-Type: application/json\" -d "$WAZUH_PASS_API" "https://localhost:55000/security/users/${user_id}" -o /dev/null --max-time 300 --retry 5 --retry-delay 5 --fail'
+                CYB3RHQ_PASS_API='{\"password\":\"'"${api_passwords[i]}"'\"}'
+                eval 'common_curl -s -k -X PUT -H \"Authorization: Bearer $TOKEN_API\" -H \"Content-Type: application/json\" -d "$CYB3RHQ_PASS_API" "https://localhost:55000/security/users/${user_id}" -o /dev/null --max-time 300 --retry 5 --retry-delay 5 --fail'
                 if [ "${api_users[i]}" == "${adminUser}" ]; then
                     sleep 1
                     adminPassword="${api_passwords[i]}"
                     passwords_getApiToken
                 fi
             fi
-            if [ "${api_users[i]}" == "wazuh-wui" ] && { [ -n "${dashboard}" ] || [ -n "${AIO}" ]; }; then
+            if [ "${api_users[i]}" == "cyb3rhq-wui" ] && { [ -n "${dashboard}" ] || [ -n "${AIO}" ]; }; then
                 passwords_changeDashboardApiPassword "${api_passwords[i]}"
             fi
         done
     else
-        if [ -n "${wazuh}" ] || [ -n "${AIO}" ]; then
+        if [ -n "${cyb3rhq}" ] || [ -n "${AIO}" ]; then
             passwords_getApiUserId "${nuser}"
-            WAZUH_PASS_API='{\"password\":\"'"${password}"'\"}'
-            eval 'common_curl -s -k -X PUT -H \"Authorization: Bearer $TOKEN_API\" -H \"Content-Type: application/json\" -d "$WAZUH_PASS_API" "https://localhost:55000/security/users/${user_id}" -o /dev/null --max-time 300 --retry 5 --retry-delay 5 --fail'
+            CYB3RHQ_PASS_API='{\"password\":\"'"${password}"'\"}'
+            eval 'common_curl -s -k -X PUT -H \"Authorization: Bearer $TOKEN_API\" -H \"Content-Type: application/json\" -d "$CYB3RHQ_PASS_API" "https://localhost:55000/security/users/${user_id}" -o /dev/null --max-time 300 --retry 5 --retry-delay 5 --fail'
         fi
-        if [ "${nuser}" == "wazuh-wui" ] && { [ -n "${dashboard}" ] || [ -n "${AIO}" ]; }; then
+        if [ "${nuser}" == "cyb3rhq-wui" ] && { [ -n "${dashboard}" ] || [ -n "${AIO}" ]; }; then
                 passwords_changeDashboardApiPassword "${password}"
         fi
     fi
 
     for i in "${!api_users[@]}"; do
-        if [ "${api_users[i]}" == "wazuh" ] || [ "${api_users[i]}" == "wazuh-wui" ]; then
+        if [ "${api_users[i]}" == "cyb3rhq" ] || [ "${api_users[i]}" == "cyb3rhq-wui" ]; then
             common_logger "The password for the ${api_users[i]} user is ${api_passwords[i]}"
         fi
     done
@@ -157,19 +157,19 @@ function installCommon_changePasswordApi() {
 
 function installCommon_createCertificates() {
 
-    common_logger -d "Creating Wazuh certificates."
+    common_logger -d "Creating Cyb3rhq certificates."
     if [ -n "${AIO}" ]; then
         eval "installCommon_getConfig certificate/config_aio.yml ${config_file} ${debug}"
     fi
 
     cert_readConfig
 
-    if [ -d /tmp/wazuh-certificates/ ]; then
-        eval "rm -rf /tmp/wazuh-certificates/ ${debug}"
+    if [ -d /tmp/cyb3rhq-certificates/ ]; then
+        eval "rm -rf /tmp/cyb3rhq-certificates/ ${debug}"
     fi
-    eval "mkdir /tmp/wazuh-certificates/ ${debug}"
+    eval "mkdir /tmp/cyb3rhq-certificates/ ${debug}"
 
-    cert_tmp_path="/tmp/wazuh-certificates/"
+    cert_tmp_path="/tmp/cyb3rhq-certificates/"
 
     cert_generateRootCAcertificate
     cert_generateAdmincertificate
@@ -177,25 +177,25 @@ function installCommon_createCertificates() {
     cert_generateFilebeatcertificates
     cert_generateDashboardcertificates
     cert_cleanFiles
-    eval "chmod 400 /tmp/wazuh-certificates/* ${debug}"
-    eval "mv /tmp/wazuh-certificates/* /tmp/wazuh-install-files ${debug}"
-    eval "rm -rf /tmp/wazuh-certificates/ ${debug}"
+    eval "chmod 400 /tmp/cyb3rhq-certificates/* ${debug}"
+    eval "mv /tmp/cyb3rhq-certificates/* /tmp/cyb3rhq-install-files ${debug}"
+    eval "rm -rf /tmp/cyb3rhq-certificates/ ${debug}"
 
 }
 
 function installCommon_createClusterKey() {
 
-    openssl rand -hex 16 >> "/tmp/wazuh-install-files/clusterkey"
+    openssl rand -hex 16 >> "/tmp/cyb3rhq-install-files/clusterkey"
 
 }
 
 function installCommon_createInstallFiles() {
 
-    if [ -d /tmp/wazuh-install-files ]; then
-        eval "rm -rf /tmp/wazuh-install-files ${debug}"
+    if [ -d /tmp/cyb3rhq-install-files ]; then
+        eval "rm -rf /tmp/cyb3rhq-install-files ${debug}"
     fi
 
-    if eval "mkdir /tmp/wazuh-install-files ${debug}"; then
+    if eval "mkdir /tmp/cyb3rhq-install-files ${debug}"; then
         common_logger "Generating configuration files."
         if [ -n "${configurations}" ]; then
             cert_checkOpenSSL
@@ -204,26 +204,26 @@ function installCommon_createInstallFiles() {
         if [ -n "${server_node_types[*]}" ]; then
             installCommon_createClusterKey
         fi
-        gen_file="/tmp/wazuh-install-files/wazuh-passwords.txt"
+        gen_file="/tmp/cyb3rhq-install-files/cyb3rhq-passwords.txt"
         passwords_generatePasswordFile
-        eval "cp '${config_file}' '/tmp/wazuh-install-files/config.yml' ${debug}"
-        eval "chown root:root /tmp/wazuh-install-files/* ${debug}"
-        eval "tar -zcf '${tar_file}' -C '/tmp/' wazuh-install-files/ ${debug}"
-        eval "rm -rf '/tmp/wazuh-install-files' ${debug}"
+        eval "cp '${config_file}' '/tmp/cyb3rhq-install-files/config.yml' ${debug}"
+        eval "chown root:root /tmp/cyb3rhq-install-files/* ${debug}"
+        eval "tar -zcf '${tar_file}' -C '/tmp/' cyb3rhq-install-files/ ${debug}"
+        eval "rm -rf '/tmp/cyb3rhq-install-files' ${debug}"
         eval "rm -rf ${config_file} ${debug}"
-        common_logger "Created ${tar_file_name}. It contains the Wazuh cluster key, certificates, and passwords necessary for installation."
+        common_logger "Created ${tar_file_name}. It contains the Cyb3rhq cluster key, certificates, and passwords necessary for installation."
     else
-        common_logger -e "Unable to create /tmp/wazuh-install-files"
+        common_logger -e "Unable to create /tmp/cyb3rhq-install-files"
         exit 1
     fi
 }
 
 function installCommon_changePasswords() {
 
-    common_logger -d "Setting Wazuh indexer cluster passwords."
+    common_logger -d "Setting Cyb3rhq indexer cluster passwords."
     if [ -f "${tar_file}" ]; then
-        eval "tar -xf ${tar_file} -C /tmp wazuh-install-files/wazuh-passwords.txt ${debug}"
-        p_file="/tmp/wazuh-install-files/wazuh-passwords.txt"
+        eval "tar -xf ${tar_file} -C /tmp cyb3rhq-install-files/cyb3rhq-passwords.txt ${debug}"
+        p_file="/tmp/cyb3rhq-install-files/cyb3rhq-passwords.txt"
         common_checkInstalled
         if [ -n "${start_indexer_cluster}" ] || [ -n "${AIO}" ]; then
             changeall=1
@@ -231,12 +231,12 @@ function installCommon_changePasswords() {
         else
             no_indexer_backup=1
         fi
-        if { [ -n "${wazuh}" ] || [ -n "${AIO}" ]; } && { [ "${server_node_types[pos]}" == "master" ] || [ "${#server_node_names[@]}" -eq 1 ]; }; then
+        if { [ -n "${cyb3rhq}" ] || [ -n "${AIO}" ]; } && { [ "${server_node_types[pos]}" == "master" ] || [ "${#server_node_names[@]}" -eq 1 ]; }; then
             passwords_getApiToken
             passwords_getApiUsers
             passwords_getApiIds
         else
-            api_users=( wazuh wazuh-wui )
+            api_users=( cyb3rhq cyb3rhq-wui )
         fi
         installCommon_readPasswordFileUsers
     else
@@ -254,7 +254,7 @@ function installCommon_changePasswords() {
     if [ -n "${start_indexer_cluster}" ] || [ -n "${AIO}" ]; then
         passwords_runSecurityAdmin
     fi
-    if [ -n "${wazuh}" ] || [ -n "${dashboard}" ] || [ -n "${AIO}" ]; then
+    if [ -n "${cyb3rhq}" ] || [ -n "${dashboard}" ] || [ -n "${AIO}" ]; then
         if [ "${server_node_types[pos]}" == "master" ] || [ "${#server_node_names[@]}" -eq 1 ] || [ -n "${dashboard_installed}" ]; then
             installCommon_changePasswordApi
         fi
@@ -294,24 +294,24 @@ function installCommon_determinePorts {
     used_ports=()
     
     if [ -n "${AIO}" ]; then
-        used_ports+=( "${wazuh_aio_ports[@]}" )
-    elif [ -n "${wazuh}" ]; then
-        used_ports+=( "${wazuh_manager_ports[@]}" )
+        used_ports+=( "${cyb3rhq_aio_ports[@]}" )
+    elif [ -n "${cyb3rhq}" ]; then
+        used_ports+=( "${cyb3rhq_manager_ports[@]}" )
     elif [ -n "${indexer}" ]; then
-        used_ports+=( "${wazuh_indexer_ports[@]}" )
+        used_ports+=( "${cyb3rhq_indexer_ports[@]}" )
     elif [ -n "${dashboard}" ]; then
-        used_ports+=( "${wazuh_dashboard_port[@]}" )
+        used_ports+=( "${cyb3rhq_dashboard_port[@]}" )
     fi
 }
 
 function installCommon_extractConfig() {
 
-    common_logger -d "Extracting Wazuh configuration."
-    if ! tar -tf "${tar_file}" | grep -q wazuh-install-files/config.yml; then
+    common_logger -d "Extracting Cyb3rhq configuration."
+    if ! tar -tf "${tar_file}" | grep -q cyb3rhq-install-files/config.yml; then
         common_logger -e "There is no config.yml file in ${tar_file}."
         exit 1
     fi
-    eval "tar -xf ${tar_file} -C /tmp wazuh-install-files/config.yml ${debug}"
+    eval "tar -xf ${tar_file} -C /tmp cyb3rhq-install-files/config.yml ${debug}"
 
 }
 
@@ -348,7 +348,7 @@ function installCommon_installDependencies() {
         installCommon_installList "${assistant_deps_to_install[@]}"
     else
         installing_assistant_deps=0
-        installCommon_installList "${wazuh_deps_to_install[@]}"
+        installCommon_installList "${cyb3rhq_deps_to_install[@]}"
     fi
 }
 
@@ -395,13 +395,13 @@ function installCommon_readPasswordFileUsers() {
     if [[ "${filecorrect}" -ne 1 ]]; then
         common_logger -e "The password file does not have a correct format or password uses invalid characters. Allowed characters: A-Za-z0-9.*+?
 
-For Wazuh indexer users, the file must have this format:
+For Cyb3rhq indexer users, the file must have this format:
 
 # Description
   indexer_username: <user>
   indexer_password: <password>
 
-For Wazuh API users, the file must have this format:
+For Cyb3rhq API users, the file must have this format:
 
 # Description
   api_username: <user>
@@ -449,7 +449,7 @@ For Wazuh API users, the file must have this format:
                 fi
             done
             if [ "${supported}" = false ] && [ -n "${indexer_installed}" ]; then
-                common_logger -e "The Wazuh API user ${fileapiusers[j]} does not exist"
+                common_logger -e "The Cyb3rhq API user ${fileapiusers[j]} does not exist"
             fi
         done
     else
@@ -463,7 +463,7 @@ For Wazuh API users, the file must have this format:
             users=( kibanaserver admin )
         fi
 
-        if [ -n "${filebeat_installed}" ] && [ -n "${wazuh}" ]; then
+        if [ -n "${filebeat_installed}" ] && [ -n "${cyb3rhq}" ]; then
             users=( admin )
         fi
 
@@ -493,7 +493,7 @@ For Wazuh API users, the file must have this format:
                 fi
             done
             if [ ${supported} = false ] && [ -n "${indexer_installed}" ]; then
-                common_logger -e "The Wazuh API user ${fileapiusers[j]} does not exist"
+                common_logger -e "The Cyb3rhq API user ${fileapiusers[j]} does not exist"
             fi
         done
 
@@ -507,16 +507,16 @@ For Wazuh API users, the file must have this format:
 
 }
 
-function installCommon_restoreWazuhrepo() {
+function installCommon_restoreCyb3rhqrepo() {
 
-    common_logger -d "Restoring Wazuh repository."
+    common_logger -d "Restoring Cyb3rhq repository."
     if [ -n "${development}" ]; then
-        if [ "${sys_type}" == "yum" ] && [ -f "/etc/yum.repos.d/wazuh.repo" ]; then
-            file="/etc/yum.repos.d/wazuh.repo"
-        elif [ "${sys_type}" == "apt-get" ] && [ -f "/etc/apt/sources.list.d/wazuh.list" ]; then
-            file="/etc/apt/sources.list.d/wazuh.list"
+        if [ "${sys_type}" == "yum" ] && [ -f "/etc/yum.repos.d/cyb3rhq.repo" ]; then
+            file="/etc/yum.repos.d/cyb3rhq.repo"
+        elif [ "${sys_type}" == "apt-get" ] && [ -f "/etc/apt/sources.list.d/cyb3rhq.list" ]; then
+            file="/etc/apt/sources.list.d/cyb3rhq.list"
         else
-            common_logger -w -d "Wazuh repository does not exists."
+            common_logger -w -d "Cyb3rhq repository does not exists."
         fi
         eval "sed -i 's/-dev//g' ${file} ${debug}"
         eval "sed -i 's/pre-release/4.x/g' ${file} ${debug}"
@@ -537,15 +537,15 @@ function installCommon_removeCentOSrepositories() {
 function installCommon_rollBack() {
 
     if [ -z "${uninstall}" ]; then
-        common_logger "--- Removing existing Wazuh installation ---"
+        common_logger "--- Removing existing Cyb3rhq installation ---"
     fi
 
-    if [ -f "/etc/yum.repos.d/wazuh.repo" ]; then
-        eval "rm /etc/yum.repos.d/wazuh.repo ${debug}"
-    elif [ -f "/etc/zypp/repos.d/wazuh.repo" ]; then
-        eval "rm /etc/zypp/repos.d/wazuh.repo ${debug}"
-    elif [ -f "/etc/apt/sources.list.d/wazuh.list" ]; then
-        eval "rm /etc/apt/sources.list.d/wazuh.list ${debug}"
+    if [ -f "/etc/yum.repos.d/cyb3rhq.repo" ]; then
+        eval "rm /etc/yum.repos.d/cyb3rhq.repo ${debug}"
+    elif [ -f "/etc/zypp/repos.d/cyb3rhq.repo" ]; then
+        eval "rm /etc/zypp/repos.d/cyb3rhq.repo ${debug}"
+    elif [ -f "/etc/apt/sources.list.d/cyb3rhq.list" ]; then
+        eval "rm /etc/apt/sources.list.d/cyb3rhq.list ${debug}"
     fi
 
     # In RHEL cases, remove the CentOS repositories configuration
@@ -553,64 +553,64 @@ function installCommon_rollBack() {
         installCommon_removeCentOSrepositories
     fi
 
-    if [[ -n "${wazuh_installed}" && ( -n "${wazuh}" || -n "${AIO}" || -n "${uninstall}" ) ]];then
-        common_logger "Removing Wazuh manager."
+    if [[ -n "${cyb3rhq_installed}" && ( -n "${cyb3rhq}" || -n "${AIO}" || -n "${uninstall}" ) ]];then
+        common_logger "Removing Cyb3rhq manager."
         if [ "${sys_type}" == "yum" ]; then
             common_checkYumLock
             if [ "${attempt}" -ne "${max_attempts}" ]; then
-                eval "yum remove wazuh-manager -y ${debug}"
-                eval "rpm -q wazuh-manager --quiet"
+                eval "yum remove cyb3rhq-manager -y ${debug}"
+                eval "rpm -q cyb3rhq-manager --quiet"
             fi
         elif [ "${sys_type}" == "apt-get" ]; then
             common_checkAptLock
-            eval "apt-get remove --purge wazuh-manager -y ${debug}"
-            eval "dpkg -l wazuh-manager 2>/dev/null | grep -E '^ii\s'"
+            eval "apt-get remove --purge cyb3rhq-manager -y ${debug}"
+            eval "dpkg -l cyb3rhq-manager 2>/dev/null | grep -E '^ii\s'"
         fi
 
         manager_installed=${PIPESTATUS[0]}
 
         if [ "${manager_installed}" -eq 0 ]; then
-            common_logger -w "The Wazuh manager package could not be removed."
+            common_logger -w "The Cyb3rhq manager package could not be removed."
         else
-            common_logger "Wazuh manager removed."
+            common_logger "Cyb3rhq manager removed."
         fi
 
     fi
 
-    if [[ ( -n "${wazuh_remaining_files}"  || -n "${wazuh_installed}" ) && ( -n "${wazuh}" || -n "${AIO}" || -n "${uninstall}" ) ]]; then
+    if [[ ( -n "${cyb3rhq_remaining_files}"  || -n "${cyb3rhq_installed}" ) && ( -n "${cyb3rhq}" || -n "${AIO}" || -n "${uninstall}" ) ]]; then
         eval "rm -rf /var/ossec/ ${debug}"
     fi
 
     if [[ -n "${indexer_installed}" && ( -n "${indexer}" || -n "${AIO}" || -n "${uninstall}" ) ]]; then
-        common_logger "Removing Wazuh indexer."
+        common_logger "Removing Cyb3rhq indexer."
         if [ "${sys_type}" == "yum" ]; then
             common_checkYumLock
             if [ "${attempt}" -ne "${max_attempts}" ]; then
-                eval "yum remove wazuh-indexer -y ${debug}"
-                eval "rpm -q wazuh-indexer --quiet"
+                eval "yum remove cyb3rhq-indexer -y ${debug}"
+                eval "rpm -q cyb3rhq-indexer --quiet"
             fi
         elif [ "${sys_type}" == "apt-get" ]; then
             common_checkAptLock
-            eval "apt-get remove --purge wazuh-indexer -y ${debug}"
-            eval "dpkg -l wazuh-indexer 2>/dev/null | grep -E '^ii\s'"
+            eval "apt-get remove --purge cyb3rhq-indexer -y ${debug}"
+            eval "dpkg -l cyb3rhq-indexer 2>/dev/null | grep -E '^ii\s'"
         fi
 
         indexer_installed=${PIPESTATUS[0]}
 
         if [ "${indexer_installed}" -eq 0 ]; then
-            common_logger -w "The Wazuh indexer package could not be removed."
+            common_logger -w "The Cyb3rhq indexer package could not be removed."
         else
-            common_logger "Wazuh indexer removed."
+            common_logger "Cyb3rhq indexer removed."
         fi
     fi
 
     if [[ ( -n "${indexer_remaining_files}" || -n "${indexer_installed}" ) && ( -n "${indexer}" || -n "${AIO}" || -n "${uninstall}" ) ]]; then
-        eval "rm -rf /var/lib/wazuh-indexer/ ${debug}"
-        eval "rm -rf /usr/share/wazuh-indexer/ ${debug}"
-        eval "rm -rf /etc/wazuh-indexer/ ${debug}"
+        eval "rm -rf /var/lib/cyb3rhq-indexer/ ${debug}"
+        eval "rm -rf /usr/share/cyb3rhq-indexer/ ${debug}"
+        eval "rm -rf /etc/cyb3rhq-indexer/ ${debug}"
     fi
 
-    if [[ -n "${filebeat_installed}" && ( -n "${wazuh}" || -n "${AIO}" || -n "${uninstall}" ) ]]; then
+    if [[ -n "${filebeat_installed}" && ( -n "${cyb3rhq}" || -n "${AIO}" || -n "${uninstall}" ) ]]; then
         common_logger "Removing Filebeat."
         if [ "${sys_type}" == "yum" ]; then
             common_checkYumLock
@@ -633,51 +633,51 @@ function installCommon_rollBack() {
         fi
     fi
 
-    if [[ ( -n "${filebeat_remaining_files}" || -n "${filebeat_installed}" ) && ( -n "${wazuh}" || -n "${AIO}" || -n "${uninstall}" ) ]]; then
+    if [[ ( -n "${filebeat_remaining_files}" || -n "${filebeat_installed}" ) && ( -n "${cyb3rhq}" || -n "${AIO}" || -n "${uninstall}" ) ]]; then
         eval "rm -rf /var/lib/filebeat/ ${debug}"
         eval "rm -rf /usr/share/filebeat/ ${debug}"
         eval "rm -rf /etc/filebeat/ ${debug}"
     fi
 
     if [[ -n "${dashboard_installed}" && ( -n "${dashboard}" || -n "${AIO}" || -n "${uninstall}" ) ]]; then
-        common_logger "Removing Wazuh dashboard."
+        common_logger "Removing Cyb3rhq dashboard."
         if [ "${sys_type}" == "yum" ]; then
             common_checkYumLock
             if [ "${attempt}" -ne "${max_attempts}" ]; then
-                eval "yum remove wazuh-dashboard -y ${debug}"
-                eval "rpm -q wazuh-dashboard --quiet"
+                eval "yum remove cyb3rhq-dashboard -y ${debug}"
+                eval "rpm -q cyb3rhq-dashboard --quiet"
             fi
         elif [ "${sys_type}" == "apt-get" ]; then
             common_checkAptLock
-            eval "apt-get remove --purge wazuh-dashboard -y ${debug}"
-            eval "dpkg -l wazuh-dashboard 2>/dev/null | grep -E '^ii\s'"
+            eval "apt-get remove --purge cyb3rhq-dashboard -y ${debug}"
+            eval "dpkg -l cyb3rhq-dashboard 2>/dev/null | grep -E '^ii\s'"
         fi
 
         dashboard_installed=${PIPESTATUS[0]}
 
         if [ "${dashboard_installed}" -eq 0 ]; then
-            common_logger -w "The Wazuh dashboard package could not be removed."
+            common_logger -w "The Cyb3rhq dashboard package could not be removed."
         else
-            common_logger "Wazuh dashboard removed."
+            common_logger "Cyb3rhq dashboard removed."
         fi
     fi
 
     if [[ ( -n "${dashboard_remaining_files}" || -n "${dashboard_installed}" ) && ( -n "${dashboard}" || -n "${AIO}" || -n "${uninstall}" ) ]]; then
-        eval "rm -rf /var/lib/wazuh-dashboard/ ${debug}"
-        eval "rm -rf /usr/share/wazuh-dashboard/ ${debug}"
-        eval "rm -rf /etc/wazuh-dashboard/ ${debug}"
-        eval "rm -rf /run/wazuh-dashboard/ ${debug}"
+        eval "rm -rf /var/lib/cyb3rhq-dashboard/ ${debug}"
+        eval "rm -rf /usr/share/cyb3rhq-dashboard/ ${debug}"
+        eval "rm -rf /etc/cyb3rhq-dashboard/ ${debug}"
+        eval "rm -rf /run/cyb3rhq-dashboard/ ${debug}"
     fi
 
-    elements_to_remove=(    "/var/log/wazuh-indexer/"
+    elements_to_remove=(    "/var/log/cyb3rhq-indexer/"
                             "/var/log/filebeat/"
                             "/etc/systemd/system/opensearch.service.wants/"
                             "/securityadmin_demo.sh"
-                            "/etc/systemd/system/multi-user.target.wants/wazuh-manager.service"
+                            "/etc/systemd/system/multi-user.target.wants/cyb3rhq-manager.service"
                             "/etc/systemd/system/multi-user.target.wants/filebeat.service"
                             "/etc/systemd/system/multi-user.target.wants/opensearch.service"
-                            "/etc/systemd/system/multi-user.target.wants/wazuh-dashboard.service"
-                            "/etc/systemd/system/wazuh-dashboard.service"
+                            "/etc/systemd/system/multi-user.target.wants/cyb3rhq-dashboard.service"
+                            "/etc/systemd/system/cyb3rhq-dashboard.service"
                             "/lib/firewalld/services/dashboard.xml"
                             "/lib/firewalld/services/opensearch.xml" )
 
@@ -701,34 +701,34 @@ function installCommon_rollBack() {
 
 function installCommon_scanDependencies() {
 
-    wazuh_deps=()
+    cyb3rhq_deps=()
     if [ -n "${AIO}" ]; then
         if [ "${sys_type}" == "yum" ]; then
-            wazuh_deps+=( "${indexer_yum_dependencies[@]}" "${wazuh_yum_dependencies[@]}" "${dashboard_yum_dependencies[@]}" )
+            cyb3rhq_deps+=( "${indexer_yum_dependencies[@]}" "${cyb3rhq_yum_dependencies[@]}" "${dashboard_yum_dependencies[@]}" )
         else 
-            wazuh_deps+=( "${indexer_apt_dependencies[@]}" "${wazuh_apt_dependencies[@]}" "${dashboard_apt_dependencies[@]}" )
+            cyb3rhq_deps+=( "${indexer_apt_dependencies[@]}" "${cyb3rhq_apt_dependencies[@]}" "${dashboard_apt_dependencies[@]}" )
         fi
     elif [ -n "${indexer}" ]; then
         if [ "${sys_type}" == "yum" ]; then
-            wazuh_deps+=( "${indexer_yum_dependencies[@]}" )
+            cyb3rhq_deps+=( "${indexer_yum_dependencies[@]}" )
         else 
-            wazuh_deps+=( "${indexer_apt_dependencies[@]}" )
+            cyb3rhq_deps+=( "${indexer_apt_dependencies[@]}" )
         fi
-    elif [ -n "${wazuh}" ]; then
+    elif [ -n "${cyb3rhq}" ]; then
         if [ "${sys_type}" == "yum" ]; then
-            wazuh_deps+=( "${wazuh_yum_dependencies[@]}" )
+            cyb3rhq_deps+=( "${cyb3rhq_yum_dependencies[@]}" )
         else 
-            wazuh_deps+=( "${wazuh_apt_dependencies[@]}" )
+            cyb3rhq_deps+=( "${cyb3rhq_apt_dependencies[@]}" )
         fi
     elif [ -n "${dashboard}" ]; then
         if [ "${sys_type}" == "yum" ]; then
-            wazuh_deps+=( "${dashboard_yum_dependencies[@]}" )
+            cyb3rhq_deps+=( "${dashboard_yum_dependencies[@]}" )
         else 
-            wazuh_deps+=( "${dashboard_apt_dependencies[@]}" )
+            cyb3rhq_deps+=( "${dashboard_apt_dependencies[@]}" )
         fi
     fi
 
-    all_deps=( "${wazuh_deps[@]}" )
+    all_deps=( "${cyb3rhq_deps[@]}" )
     if [ "${sys_type}" == "apt-get" ]; then
         assistant_deps+=( "${assistant_apt_dependencies[@]}" )
         command='! apt list --installed 2>/dev/null | grep -q -E ^"${dep}"\/'
@@ -743,7 +743,7 @@ function installCommon_scanDependencies() {
     fi
 
     # Remove lsof dependency if not necessary
-    if [ -z "${AIO}" ] && [ -z "${wazuh}" ] && [ -z "${indexer}" ] && [ -z "${dashboard}" ]; then
+    if [ -z "${AIO}" ] && [ -z "${cyb3rhq}" ] && [ -z "${indexer}" ] && [ -z "${dashboard}" ]; then
         assistant_deps=( "${assistant_deps[@]/lsof}" )
     fi
     
@@ -753,14 +753,14 @@ function installCommon_scanDependencies() {
     assistant_deps_to_install=()
     deps_to_install=()
 
-    # Get not installed dependencies of Assistant and Wazuh
+    # Get not installed dependencies of Assistant and Cyb3rhq
     for dep in "${all_deps[@]}"; do
         if eval "${command}"; then
             deps_to_install+=("${dep}")
             if [[ "${assistant_deps[*]}" =~ "${dep}" ]]; then
                 assistant_deps_to_install+=("${dep}")
             else
-                wazuh_deps_to_install+=("${dep}")
+                cyb3rhq_deps_to_install+=("${dep}")
             fi
         fi
     done

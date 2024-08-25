@@ -1,5 +1,5 @@
-# Wazuh installer - main functions
-# Copyright (C) 2015, Wazuh Inc.
+# Cyb3rhq installer - main functions
+# Copyright (C) 2015, Cyb3rhq Inc.
 #
 # This program is a free software; you can redistribute it
 # and/or modify it under the terms of the GNU General Public
@@ -10,26 +10,26 @@ function getHelp() {
 
     echo -e ""
     echo -e "NAME"
-    echo -e "        $(basename "$0") - Install and configure Wazuh central components: Wazuh server, Wazuh indexer, and Wazuh dashboard."
+    echo -e "        $(basename "$0") - Install and configure Cyb3rhq central components: Cyb3rhq server, Cyb3rhq indexer, and Cyb3rhq dashboard."
     echo -e ""
     echo -e "SYNOPSIS"
     echo -e "        $(basename "$0") [OPTIONS] -a | -c | -s | -wi <indexer-node-name> | -wd <dashboard-node-name> | -ws <server-node-name>"
     echo -e ""
     echo -e "DESCRIPTION"
     echo -e "        -a,  --all-in-one"
-    echo -e "                Install and configure Wazuh server, Wazuh indexer, Wazuh dashboard."
+    echo -e "                Install and configure Cyb3rhq server, Cyb3rhq indexer, Cyb3rhq dashboard."
     echo -e ""
     echo -e "        -c,  --config-file <path-to-config-yml>"
-    echo -e "                Path to the configuration file used to generate wazuh-install-files.tar file containing the files that will be needed for installation. By default, the Wazuh installation assistant will search for a file named config.yml in the same path as the script."
+    echo -e "                Path to the configuration file used to generate cyb3rhq-install-files.tar file containing the files that will be needed for installation. By default, the Cyb3rhq installation assistant will search for a file named config.yml in the same path as the script."
     echo -e ""
-    echo -e "        -dw,  --download-wazuh <deb|rpm>"
+    echo -e "        -dw,  --download-cyb3rhq <deb|rpm>"
     echo -e "                Download all the packages necessary for offline installation. Type of packages to download for offline installation (rpm, deb)"
     echo -e ""
     echo -e "        -fd,  --force-install-dashboard"
-    echo -e "                Force Wazuh dashboard installation to continue even when it is not capable of connecting to the Wazuh indexer."
+    echo -e "                Force Cyb3rhq dashboard installation to continue even when it is not capable of connecting to the Cyb3rhq indexer."
     echo -e ""
     echo -e "        -g,  --generate-config-files"
-    echo -e "                Generate wazuh-install-files.tar file containing the files that will be needed for installation from config.yml. In distributed deployments you will need to copy this file to all hosts."
+    echo -e "                Generate cyb3rhq-install-files.tar file containing the files that will be needed for installation from config.yml. In distributed deployments you will need to copy this file to all hosts."
     echo -e ""
     echo -e "        -h,  --help"
     echo -e "                Display this help and exit."
@@ -47,31 +47,31 @@ function getHelp() {
     echo -e "                Perform an offline installation. This option must be used with -a, -ws, -wi, or -wd."
     echo -e ""
     echo -e "        -p,  --port"
-    echo -e "                Specifies the Wazuh web user interface port. By default is the 443 TCP port. Recommended ports are: 8443, 8444, 8080, 8888, 9000."
+    echo -e "                Specifies the Cyb3rhq web user interface port. By default is the 443 TCP port. Recommended ports are: 8443, 8444, 8080, 8888, 9000."
     echo -e ""
     echo -e "        -s,  --start-cluster"
-    echo -e "                Initialize Wazuh indexer cluster security settings."
+    echo -e "                Initialize Cyb3rhq indexer cluster security settings."
     echo -e ""
     echo -e "        -t,  --tar <path-to-certs-tar>"
-    echo -e "                Path to tar file containing certificate files. By default, the Wazuh installation assistant will search for a file named wazuh-install-files.tar in the same path as the script."
+    echo -e "                Path to tar file containing certificate files. By default, the Cyb3rhq installation assistant will search for a file named cyb3rhq-install-files.tar in the same path as the script."
     echo -e ""
     echo -e "        -u,  --uninstall"
-    echo -e "                Uninstalls all Wazuh components. This will erase all the existing configuration and data."
+    echo -e "                Uninstalls all Cyb3rhq components. This will erase all the existing configuration and data."
     echo -e ""
     echo -e "        -v,  --verbose"
     echo -e "                Shows the complete installation output."
     echo -e ""
     echo -e "        -V,  --version"
-    echo -e "                Shows the version of the script and Wazuh packages."
+    echo -e "                Shows the version of the script and Cyb3rhq packages."
     echo -e ""
-    echo -e "        -wd,  --wazuh-dashboard <dashboard-node-name>"
-    echo -e "                Install and configure Wazuh dashboard, used for distributed deployments."
+    echo -e "        -wd,  --cyb3rhq-dashboard <dashboard-node-name>"
+    echo -e "                Install and configure Cyb3rhq dashboard, used for distributed deployments."
     echo -e ""
-    echo -e "        -wi,  --wazuh-indexer <indexer-node-name>"
-    echo -e "                Install and configure Wazuh indexer, used for distributed deployments."
+    echo -e "        -wi,  --cyb3rhq-indexer <indexer-node-name>"
+    echo -e "                Install and configure Cyb3rhq indexer, used for distributed deployments."
     echo -e ""
-    echo -e "        -ws,  --wazuh-server <server-node-name>"
-    echo -e "                Install and configure Wazuh manager and Filebeat, used for distributed deployments."
+    echo -e "        -ws,  --cyb3rhq-server <server-node-name>"
+    echo -e "                Install and configure Cyb3rhq manager and Filebeat, used for distributed deployments."
     exit 1
 
 }
@@ -165,9 +165,9 @@ function main() {
                 showVersion=1
                 shift 1
                 ;;
-            "-wd"|"--wazuh-dashboard")
+            "-wd"|"--cyb3rhq-dashboard")
                 if [ -z "${2}" ]; then
-                    common_logger -e "Error on arguments. Probably missing <node-name> after -wd|---wazuh-dashboard"
+                    common_logger -e "Error on arguments. Probably missing <node-name> after -wd|---cyb3rhq-dashboard"
                     getHelp
                     exit 1
                 fi
@@ -175,9 +175,9 @@ function main() {
                 dashname="${2}"
                 shift 2
                 ;;
-            "-wi"|"--wazuh-indexer")
+            "-wi"|"--cyb3rhq-indexer")
                 if [ -z "${2}" ]; then
-                    common_logger -e "Arguments contain errors. Probably missing <node-name> after -wi|--wazuh-indexer."
+                    common_logger -e "Arguments contain errors. Probably missing <node-name> after -wi|--cyb3rhq-indexer."
                     getHelp
                     exit 1
                 fi
@@ -185,19 +185,19 @@ function main() {
                 indxname="${2}"
                 shift 2
                 ;;
-            "-ws"|"--wazuh-server")
+            "-ws"|"--cyb3rhq-server")
                 if [ -z "${2}" ]; then
-                    common_logger -e "Error on arguments. Probably missing <node-name> after -ws|--wazuh-server"
+                    common_logger -e "Error on arguments. Probably missing <node-name> after -ws|--cyb3rhq-server"
                     getHelp
                     exit 1
                 fi
-                wazuh=1
+                cyb3rhq=1
                 winame="${2}"
                 shift 2
                 ;;
-            "-dw"|"--download-wazuh")
+            "-dw"|"--download-cyb3rhq")
                 if [ "${2}" != "deb" ] && [ "${2}" != "rpm" ]; then
-                    common_logger -e "Error on arguments. Probably missing <deb|rpm> after -dw|--download-wazuh"
+                    common_logger -e "Error on arguments. Probably missing <deb|rpm> after -dw|--download-cyb3rhq"
                     getHelp
                     exit 1
                 fi
@@ -218,13 +218,13 @@ function main() {
     fi
 
     if [ -n "${showVersion}" ]; then
-        common_logger "Wazuh version: ${wazuh_version}"
+        common_logger "Cyb3rhq version: ${cyb3rhq_version}"
         common_logger "Filebeat version: ${filebeat_version}"
-        common_logger "Wazuh installation assistant version: ${wazuh_install_version}"
+        common_logger "Cyb3rhq installation assistant version: ${cyb3rhq_install_version}"
         exit 0
     fi
 
-    common_logger "Starting Wazuh installation assistant. Wazuh version: ${wazuh_version}"
+    common_logger "Starting Cyb3rhq installation assistant. Cyb3rhq version: ${cyb3rhq_version}"
     common_logger "Verbose logging redirected to ${logfile}"
 
 # -------------- Uninstall case  ------------------------------------
@@ -244,7 +244,7 @@ function main() {
 
     checks_arch
     if [ -n "${port_specified}" ]; then
-        checks_available_port "${port_number}" "${wazuh_aio_ports[@]}"
+        checks_available_port "${port_number}" "${cyb3rhq_aio_ports[@]}"
         dashboard_changePort "${port_number}"
     elif [ -n "${AIO}" ] || [ -n "${dashboard}" ]; then
         dashboard_changePort "${http_port}"
@@ -271,7 +271,7 @@ function main() {
         checks_previousCertificate
     fi
 
-    if [ -n "${AIO}" ] || [ -n "${indexer}" ] || [ -n "${wazuh}" ] || [ -n "${dashboard}" ]; then
+    if [ -n "${AIO}" ] || [ -n "${indexer}" ] || [ -n "${cyb3rhq}" ] || [ -n "${dashboard}" ]; then
         if [ -n "${AIO}" ]; then
             rm -f "${tar_file}"
         fi
@@ -279,7 +279,7 @@ function main() {
         installCommon_installDependencies
     fi
 
-# --------------  Wazuh repo  ----------------------
+# --------------  Cyb3rhq repo  ----------------------
 
     # Offline installation case: extract the compressed files
     if [ -n "${offline_install}" ]; then
@@ -287,10 +287,10 @@ function main() {
         offline_extractFiles
     fi
 
-    if [ -n "${AIO}" ] || [ -n "${indexer}" ] || [ -n "${dashboard}" ] || [ -n "${wazuh}" ]; then
+    if [ -n "${AIO}" ] || [ -n "${indexer}" ] || [ -n "${dashboard}" ] || [ -n "${cyb3rhq}" ]; then
         check_curlVersion
         if [ -z "${offline_install}" ]; then
-            installCommon_addWazuhRepo
+            installCommon_addCyb3rhqRepo
         fi
     fi
 
@@ -304,12 +304,12 @@ function main() {
 
     if [ -z "${configurations}" ] && [ -z "${download}" ]; then
         installCommon_extractConfig
-        config_file="/tmp/wazuh-install-files/config.yml"
+        config_file="/tmp/cyb3rhq-install-files/config.yml"
         cert_readConfig
     fi
 
     # Distributed architecture: node names must be different
-    if [[ -z "${AIO}" && -z "${download}" && ( -n "${indexer}"  || -n "${dashboard}" || -n "${wazuh}" ) ]]; then
+    if [[ -z "${AIO}" && -z "${download}" && ( -n "${indexer}"  || -n "${dashboard}" || -n "${cyb3rhq}" ) ]]; then
         checks_names
     fi
 
@@ -317,18 +317,18 @@ function main() {
         installCommon_removeAssistantDependencies
     fi
 
-# -------------- Wazuh indexer case -------------------------------
+# -------------- Cyb3rhq indexer case -------------------------------
 
     if [ -n "${indexer}" ]; then
-        common_logger "--- Wazuh indexer ---"
+        common_logger "--- Cyb3rhq indexer ---"
         indexer_install
         indexer_configure
-        installCommon_startService "wazuh-indexer"
+        installCommon_startService "cyb3rhq-indexer"
         indexer_initialize
         installCommon_removeAssistantDependencies
     fi
 
-# -------------- Start Wazuh indexer cluster case  ------------------
+# -------------- Start Cyb3rhq indexer cluster case  ------------------
 
     if [ -n "${start_indexer_cluster}" ]; then
         indexer_startCluster
@@ -336,29 +336,29 @@ function main() {
         installCommon_removeAssistantDependencies
     fi
 
-# -------------- Wazuh dashboard case  ------------------------------
+# -------------- Cyb3rhq dashboard case  ------------------------------
 
     if [ -n "${dashboard}" ]; then
-        common_logger "--- Wazuh dashboard ----"
+        common_logger "--- Cyb3rhq dashboard ----"
         dashboard_install
         dashboard_configure
-        installCommon_startService "wazuh-dashboard"
+        installCommon_startService "cyb3rhq-dashboard"
         installCommon_changePasswords
         dashboard_initialize
         installCommon_removeAssistantDependencies
 
     fi
 
-# -------------- Wazuh server case  ---------------------------------------
+# -------------- Cyb3rhq server case  ---------------------------------------
 
-    if [ -n "${wazuh}" ]; then
-        common_logger "--- Wazuh server ---"
+    if [ -n "${cyb3rhq}" ]; then
+        common_logger "--- Cyb3rhq server ---"
         manager_install
         manager_configure
         if [ -n "${server_node_types[*]}" ]; then
             manager_startCluster
         fi
-        installCommon_startService "wazuh-manager"
+        installCommon_startService "cyb3rhq-manager"
         filebeat_install
         filebeat_configure
         installCommon_changePasswords
@@ -370,22 +370,22 @@ function main() {
 
     if [ -n "${AIO}" ]; then
 
-        common_logger "--- Wazuh indexer ---"
+        common_logger "--- Cyb3rhq indexer ---"
         indexer_install
         indexer_configure
-        installCommon_startService "wazuh-indexer"
+        installCommon_startService "cyb3rhq-indexer"
         indexer_initialize
-        common_logger "--- Wazuh server ---"
+        common_logger "--- Cyb3rhq server ---"
         manager_install
         manager_configure
-        installCommon_startService "wazuh-manager"
+        installCommon_startService "cyb3rhq-manager"
         filebeat_install
         filebeat_configure
         installCommon_startService "filebeat"
-        common_logger "--- Wazuh dashboard ---"
+        common_logger "--- Cyb3rhq dashboard ---"
         dashboard_install
         dashboard_configure
-        installCommon_startService "wazuh-dashboard"
+        installCommon_startService "cyb3rhq-dashboard"
         installCommon_changePasswords
         dashboard_initializeAIO
         installCommon_removeAssistantDependencies
@@ -403,14 +403,14 @@ function main() {
 # -------------------------------------------------------------------
 
     if [ -z "${configurations}" ] && [ -z "${download}" ] && [ -z "${offline_install}" ]; then
-        installCommon_restoreWazuhrepo
+        installCommon_restoreCyb3rhqrepo
     fi
 
-    if [ -n "${AIO}" ] || [ -n "${indexer}" ] || [ -n "${dashboard}" ] || [ -n "${wazuh}" ]; then
-        eval "rm -rf /tmp/wazuh-install-files ${debug}"
+    if [ -n "${AIO}" ] || [ -n "${indexer}" ] || [ -n "${dashboard}" ] || [ -n "${cyb3rhq}" ]; then
+        eval "rm -rf /tmp/cyb3rhq-install-files ${debug}"
         common_logger "Installation finished."
     elif [ -n "${start_indexer_cluster}" ]; then
-        common_logger "Wazuh indexer cluster started."
+        common_logger "Cyb3rhq indexer cluster started."
     fi
 
 }

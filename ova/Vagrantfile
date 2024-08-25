@@ -5,15 +5,15 @@ Vagrant.configure("2") do |config|
 
   config.vm.box_url = "https://packages-dev.wazuh.com/vms/ova/amznlinux-2.box"
   config.vm.box = "amznlinux-2"
-  config.vm.hostname = "wazuh-server"
+  config.vm.hostname = "cyb3rhq-server"
   config.vm.provider "virtualbox" do |vb|
-    vb.name = "vm_wazuh"
+    vb.name = "vm_cyb3rhq"
     vb.memory = "8192"
     vb.cpus = "4"
   end
 
-  config.ssh.username = "wazuh-user"
-  config.ssh.password = "wazuh"
+  config.ssh.username = "cyb3rhq-user"
+  config.ssh.password = "cyb3rhq"
   config.ssh.insert_key = true
 
   # Synced folder configuration

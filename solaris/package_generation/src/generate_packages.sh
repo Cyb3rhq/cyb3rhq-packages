@@ -1,6 +1,6 @@
 #!/bin/bash
-# Created by Wazuh, Inc. <info@wazuh.com>.
-# Copyright (C) 2015, Wazuh Inc.
+# Created by Cyb3rhq, Inc. <info@wazuh.com>.
+# Copyright (C) 2015, Cyb3rhq Inc.
 # This program is a free software; you can redistribute it and/or modify it under the terms of GPLv2
 # This script need packages generation scripts to be on the Solaris machine.
 
@@ -27,7 +27,7 @@ chmod +x ${SOLARIS_VERSION}/*.sh
 
 cd ${SOLARIS_VERSION}
 
-echo "Generating Wazuh package"
-./generate_wazuh_packages.sh -b ${BRANCH_TAG} -s /tmp/shared -c /tmp/shared
+echo "Generating Cyb3rhq package"
+./generate_cyb3rhq_packages.sh -b ${BRANCH_TAG} -s /tmp/shared -c /tmp/shared
 
 exit 0

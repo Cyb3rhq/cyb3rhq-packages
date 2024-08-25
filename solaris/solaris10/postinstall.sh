@@ -1,8 +1,8 @@
 #!/bin/sh
-# postinst script for wazuh-agent
-# Wazuh, Inc 2015
+# postinst script for cyb3rhq-agent
+# Cyb3rhq, Inc 2015
 
-OSSEC_HIDS_TMP_DIR="/tmp/wazuh-agent"
+OSSEC_HIDS_TMP_DIR="/tmp/cyb3rhq-agent"
 DIR="/var/ossec"
 
 # Restore the ossec.confs, client.keys and local_internal_options
@@ -21,18 +21,18 @@ fi
 
 # logrotate configuration file
 if [ -d /etc/logrotate.d/ ]; then
-    if [ -e /etc/logrotate.d/wazuh-hids ]; then
-        rm -f /etc/logrotate.d/wazuh-hids
+    if [ -e /etc/logrotate.d/cyb3rhq-hids ]; then
+        rm -f /etc/logrotate.d/cyb3rhq-hids
     fi
-    cp -p ${DIR}/etc/logrotate.d/wazuh-hids /etc/logrotate.d/wazuh-hids
-    chmod 644 /etc/logrotate.d/wazuh-hids
-    chown root:root /etc/logrotate.d/wazuh-hids
+    cp -p ${DIR}/etc/logrotate.d/cyb3rhq-hids /etc/logrotate.d/cyb3rhq-hids
+    chmod 644 /etc/logrotate.d/cyb3rhq-hids
+    chown root:root /etc/logrotate.d/cyb3rhq-hids
     rm -rf ${DIR}/etc/logrotate.d
 fi
 
 # Service
-if [ -f /etc/init.d/wazuh-agent ]; then
-        /etc/init.d/wazuh-agent stop > /dev/null 2>&1
+if [ -f /etc/init.d/cyb3rhq-agent ]; then
+        /etc/init.d/cyb3rhq-agent stop > /dev/null 2>&1
 fi
 
 ## Delete tmp directory

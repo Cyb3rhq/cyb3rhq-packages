@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Wazuh package generator
-# Copyright (C) 2021, Wazuh Inc.
+# Cyb3rhq package generator
+# Copyright (C) 2021, Cyb3rhq Inc.
 #
 # This program is a free software; you can redistribute it
 # and/or modify it under the terms of the GNU General Public
@@ -25,7 +25,7 @@ clean() {
     exit_code=$1
 
     # Clean the files
-    rm -rf ${dockerfile_path}/{*.sh,*.tar.gz,wazuh-*}
+    rm -rf ${dockerfile_path}/{*.sh,*.tar.gz,cyb3rhq-*}
 
     exit ${exit_code}
 }
@@ -52,13 +52,13 @@ build_deb() {
         ../base/generate_base.sh -s ${outdir} -r ${revision} ${base_cmd}
     else
         if [ "${reference}" ];then
-            version=$(curl -sL https://raw.githubusercontent.com/wazuh/wazuh-packages/${reference}/VERSION | cat)
+            version=$(curl -sL https://raw.githubusercontent.com/cyb3rhq/cyb3rhq-packages/${reference}/VERSION | cat)
         else
             version=$(cat ${current_path}/../../../VERSION)
         fi
-        basefile="${outdir}/wazuh-indexer-base-${version}-${revision}-linux-x64.tar.xz"
+        basefile="${outdir}/cyb3rhq-indexer-base-${version}-${revision}-linux-x64.tar.xz"
         if ! test -f "${basefile}"; then
-            echo "Did not find expected Wazuh indexer base file: ${basefile} in output path. Exiting..."
+            echo "Did not find expected Cyb3rhq indexer base file: ${basefile} in output path. Exiting..."
             exit 1
         fi
     fi
@@ -111,7 +111,7 @@ help() {
     echo "    -b, --build-base <yes/no>         [Optional] Build a new base or use a existing one. By default, yes."
     echo "    -r, --revision <rev>              [Optional] Package revision. By default: 1."
     echo "    -s, --store <path>                [Optional] Set the destination path of package. By default, an output folder will be created."
-    echo "    --reference <ref>                 [Optional] wazuh-packages branch to download SPECs, not used by default."
+    echo "    --reference <ref>                 [Optional] cyb3rhq-packages branch to download SPECs, not used by default."
     echo "    --dont-build-docker               [Optional] Locally built docker image will be used instead of generating a new one."
     echo "    --future                          [Optional] Build test future package 99.99.0 Used for development purposes."
     echo "    -h, --help                        Show this help."

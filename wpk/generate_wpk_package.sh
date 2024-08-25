@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# Program to build the Wazuh WPK packages
-# Wazuh package generator
-# Copyright (C) 2015, Wazuh Inc.
+# Program to build the Cyb3rhq WPK packages
+# Cyb3rhq package generator
+# Copyright (C) 2015, Cyb3rhq Inc.
 #
 # This program is a free software; you can redistribute it
 # and/or modify it under the terms of the GNU General Public
@@ -48,7 +48,7 @@ function pack_wpk() {
         WPK_CERT_FLAG="--aws-wpk-cert ${WPK_CERT}"
     fi
 
-    docker run -t --rm -v ${KEYDIR}:/etc/wazuh:Z -v ${DESTINATION}:/var/local/wazuh:Z -v ${PKG_PATH}:/var/pkg:Z \
+    docker run -t --rm -v ${KEYDIR}:/etc/cyb3rhq:Z -v ${DESTINATION}:/var/local/cyb3rhq:Z -v ${PKG_PATH}:/var/pkg:Z \
         -v ${CHECKSUMDIR}:/var/local/checksum:Z \
         ${CONTAINER_NAME} -b ${BRANCH} -j ${JOBS} -o ${OUT_NAME} -p ${INSTALLATION_PATH} --aws-wpk-key-region ${AWS_REGION} ${WPK_KEY_FLAG} ${WPK_CERT_FLAG} -pn ${PACKAGE_NAME} ${CHECKSUM_FLAG}
 
@@ -79,7 +79,7 @@ function build_wpk_linux() {
         WPK_CERT_FLAG="--aws-wpk-cert ${WPK_CERT}"
     fi
 
-    docker run -t --rm -v ${KEYDIR}:/etc/wazuh:Z -v ${DESTINATION}:/var/local/wazuh:Z \
+    docker run -t --rm -v ${KEYDIR}:/etc/cyb3rhq:Z -v ${DESTINATION}:/var/local/cyb3rhq:Z \
         -v ${CHECKSUMDIR}:/var/local/checksum:Z \
         ${CONTAINER_NAME} -b ${BRANCH} -j ${JOBS} -o ${OUT_NAME} -p ${INSTALLATION_PATH} --aws-wpk-key-region ${AWS_REGION} ${WPK_KEY_FLAG} ${WPK_CERT_FLAG} ${CHECKSUM_FLAG}
 

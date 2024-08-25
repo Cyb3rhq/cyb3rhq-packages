@@ -1,0 +1,18 @@
+#!/bin/sh
+
+# add something which happens before install
+
+directory_base="DIRECTORY_BASE"
+
+# Create the cyb3rhq group if it doesn't exists
+if command -v getent > /dev/null 2>&1 && ! getent group cyb3rhq > /dev/null 2>&1; then
+  addgroup -S cyb3rhq
+elif ! id -g cyb3rhq > /dev/null 2>&1; then
+  addgroup -S cyb3rhq
+fi
+# Create the cyb3rhq user if it doesn't exists
+if ! id -u cyb3rhq > /dev/null 2>&1; then
+  adduser -S -G cyb3rhq -h ${directory_base} -s /sbin/nologin cyb3rhq
+fi
+
+exit 0

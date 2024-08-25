@@ -44,7 +44,7 @@ function check_file() {
 function check_shards() {
 
     retries=0
-    until [ "$(curl -s -k -u admin:admin "https://127.0.0.1:9200/_template/wazuh?pretty&filter_path=wazuh.settings.index.number_of_shards" | grep "number_of_shards")" ] || [ "${retries}" -eq 5 ]; do
+    until [ "$(curl -s -k -u admin:admin "https://127.0.0.1:9200/_template/cyb3rhq?pretty&filter_path=cyb3rhq.settings.index.number_of_shards" | grep "number_of_shards")" ] || [ "${retries}" -eq 5 ]; do
         sleep 5
         retries=$((retries+1))
     done
@@ -53,30 +53,30 @@ function check_shards() {
         echo "ERROR: Could not get the number of shards."
         exit 1
     fi
-    curl -s -k -u admin:admin "https://127.0.0.1:9200/_template/wazuh?pretty&filter_path=wazuh.settings.index.number_of_shards"
+    curl -s -k -u admin:admin "https://127.0.0.1:9200/_template/cyb3rhq?pretty&filter_path=cyb3rhq.settings.index.number_of_shards"
     echo "INFO: Number of shards detected."
 
 }
 
 function dashboard_installation() {
 
-    install_package "wazuh-dashboard"
-    check_package "wazuh-dashboard"
+    install_package "cyb3rhq-dashboard"
+    check_package "cyb3rhq-dashboard"
 
-    echo "INFO: Generating certificates of the Wazuh dashboard..."
+    echo "INFO: Generating certificates of the Cyb3rhq dashboard..."
     NODE_NAME=dashboard
-    mkdir /etc/wazuh-dashboard/certs
-    mv -n wazuh-certificates/$NODE_NAME.pem /etc/wazuh-dashboard/certs/dashboard.pem
-    mv -n wazuh-certificates/$NODE_NAME-key.pem /etc/wazuh-dashboard/certs/dashboard-key.pem
-    cp wazuh-certificates/root-ca.pem /etc/wazuh-dashboard/certs/
-    chmod 500 /etc/wazuh-dashboard/certs
-    chmod 400 /etc/wazuh-dashboard/certs/*
-    chown -R wazuh-dashboard:wazuh-dashboard /etc/wazuh-dashboard/certs
+    mkdir /etc/cyb3rhq-dashboard/certs
+    mv -n cyb3rhq-certificates/$NODE_NAME.pem /etc/cyb3rhq-dashboard/certs/dashboard.pem
+    mv -n cyb3rhq-certificates/$NODE_NAME-key.pem /etc/cyb3rhq-dashboard/certs/dashboard-key.pem
+    cp cyb3rhq-certificates/root-ca.pem /etc/cyb3rhq-dashboard/certs/
+    chmod 500 /etc/cyb3rhq-dashboard/certs
+    chmod 400 /etc/cyb3rhq-dashboard/certs/*
+    chown -R cyb3rhq-dashboard:cyb3rhq-dashboard /etc/cyb3rhq-dashboard/certs
 
     if [ "${sys_type}" == "deb" ]; then
-        enable_start_service "wazuh-dashboard"
+        enable_start_service "cyb3rhq-dashboard"
     elif [ "${sys_type}" == "rpm" ]; then
-        /usr/share/wazuh-dashboard/bin/opensearch-dashboards "-c /etc/wazuh-dashboard/opensearch_dashboards.yml" --allow-root > /dev/null 2>&1 &
+        /usr/share/cyb3rhq-dashboard/bin/opensearch-dashboards "-c /etc/cyb3rhq-dashboard/opensearch_dashboards.yml" --allow-root > /dev/null 2>&1 &
     fi
 
     retries=0
@@ -87,36 +87,36 @@ function dashboard_installation() {
         retries=$((retries+1))
     done
     if [ ${retries} -eq 5 ]; then
-        echo "ERROR: The Wazuh dashboard installation has failed."
+        echo "ERROR: The Cyb3rhq dashboard installation has failed."
         exit 1
     else
-        echo "INFO: The Wazuh dashboard is ready."
+        echo "INFO: The Cyb3rhq dashboard is ready."
     fi
 
 }
 
 function download_resources() {
 
-    check_file "${ABSOLUTE_PATH}"/wazuh-install.sh
-    bash "${ABSOLUTE_PATH}"/wazuh-install.sh -dw "${sys_type}"
+    check_file "${ABSOLUTE_PATH}"/cyb3rhq-install.sh
+    bash "${ABSOLUTE_PATH}"/cyb3rhq-install.sh -dw "${sys_type}"
     echo "INFO: Downloading the resources..."
 
     curl -sO https://packages.wazuh.com/4.3/config.yml
     check_file "config.yml"
 
     sed -i -e '0,/<indexer-node-ip>/ s/<indexer-node-ip>/127.0.0.1/' config.yml
-    sed -i -e '0,/<wazuh-manager-ip>/ s/<wazuh-manager-ip>/127.0.0.1/' config.yml
+    sed -i -e '0,/<cyb3rhq-manager-ip>/ s/<cyb3rhq-manager-ip>/127.0.0.1/' config.yml
     sed -i -e '0,/<dashboard-node-ip>/ s/<dashboard-node-ip>/127.0.0.1/' config.yml
 
-    curl -sO https://packages.wazuh.com/4.3/wazuh-certs-tool.sh
-    check_file "wazuh-certs-tool.sh"
-    chmod 744 wazuh-certs-tool.sh
-    ./wazuh-certs-tool.sh --all
+    curl -sO https://packages.wazuh.com/4.3/cyb3rhq-certs-tool.sh
+    check_file "cyb3rhq-certs-tool.sh"
+    chmod 744 cyb3rhq-certs-tool.sh
+    ./cyb3rhq-certs-tool.sh --all
 
-    tar xf wazuh-offline.tar.gz
+    tar xf cyb3rhq-offline.tar.gz
     echo "INFO: Download finished."
 
-    if [ ! -d ./wazuh-offline ]; then
+    if [ ! -d ./cyb3rhq-offline ]; then
         echo "ERROR: Could not download the resources."
         exit 1
     fi
@@ -148,22 +148,22 @@ function filebeat_installation() {
     install_package "filebeat"
     check_package "filebeat"
 
-    cp ./wazuh-offline/wazuh-files/filebeat.yml /etc/filebeat/ &&\
-    cp ./wazuh-offline/wazuh-files/wazuh-template.json /etc/filebeat/ &&\
-    chmod go+r /etc/filebeat/wazuh-template.json
+    cp ./cyb3rhq-offline/cyb3rhq-files/filebeat.yml /etc/filebeat/ &&\
+    cp ./cyb3rhq-offline/cyb3rhq-files/cyb3rhq-template.json /etc/filebeat/ &&\
+    chmod go+r /etc/filebeat/cyb3rhq-template.json
 
-    sed -i 's|\("index.number_of_shards": \)".*"|\1 "1"|' /etc/filebeat/wazuh-template.json
+    sed -i 's|\("index.number_of_shards": \)".*"|\1 "1"|' /etc/filebeat/cyb3rhq-template.json
     filebeat keystore create
     echo admin | filebeat keystore add username --stdin --force
     echo admin | filebeat keystore add password --stdin --force
-    tar -xzf ./wazuh-offline/wazuh-files/wazuh-filebeat-0.4.tar.gz -C /usr/share/filebeat/module
+    tar -xzf ./cyb3rhq-offline/cyb3rhq-files/cyb3rhq-filebeat-0.4.tar.gz -C /usr/share/filebeat/module
 
     echo "INFO: Generating certificates of Filebeat..."
-    NODE_NAME=wazuh-1
+    NODE_NAME=cyb3rhq-1
     mkdir /etc/filebeat/certs
-    mv -n wazuh-certificates/$NODE_NAME.pem /etc/filebeat/certs/filebeat.pem
-    mv -n wazuh-certificates/$NODE_NAME-key.pem /etc/filebeat/certs/filebeat-key.pem
-    cp wazuh-certificates/root-ca.pem /etc/filebeat/certs/
+    mv -n cyb3rhq-certificates/$NODE_NAME.pem /etc/filebeat/certs/filebeat.pem
+    mv -n cyb3rhq-certificates/$NODE_NAME-key.pem /etc/filebeat/certs/filebeat-key.pem
+    cp cyb3rhq-certificates/root-ca.pem /etc/filebeat/certs/
     chmod 500 /etc/filebeat/certs
     chmod 400 /etc/filebeat/certs/*
     chown -R root:root /etc/filebeat/certs
@@ -187,7 +187,7 @@ function filebeat_installation() {
 function indexer_initialize() {
 
     retries=0
-    until [ "$(cat /var/log/wazuh-indexer/wazuh-cluster.log | grep "Node started")" ] || [ "${retries}" -eq 5 ]; do
+    until [ "$(cat /var/log/cyb3rhq-indexer/cyb3rhq-cluster.log | grep "Node started")" ] || [ "${retries}" -eq 5 ]; do
         sleep 5
         retries=$((retries+1))
     done
@@ -196,45 +196,45 @@ function indexer_initialize() {
         echo "ERROR: The indexer node is not started."
         exit 1
     fi
-    /usr/share/wazuh-indexer/bin/indexer-security-init.sh
+    /usr/share/cyb3rhq-indexer/bin/indexer-security-init.sh
 
 }
 
 function indexer_installation() {
 
     if [ "${sys_type}" == "rpm" ]; then
-        rpm --import ./wazuh-offline/wazuh-files/GPG-KEY-WAZUH
+        rpm --import ./cyb3rhq-offline/cyb3rhq-files/GPG-KEY-CYB3RHQ
     fi
 
-    install_package "wazuh-indexer"
-    check_package "wazuh-indexer"
+    install_package "cyb3rhq-indexer"
+    check_package "cyb3rhq-indexer"
 
-    echo "INFO: Generating certificates of the Wazuh indexer..."
+    echo "INFO: Generating certificates of the Cyb3rhq indexer..."
     NODE_NAME=node-1
-    mkdir /etc/wazuh-indexer/certs
-    mv -n wazuh-certificates/$NODE_NAME.pem /etc/wazuh-indexer/certs/indexer.pem
-    mv -n wazuh-certificates/$NODE_NAME-key.pem /etc/wazuh-indexer/certs/indexer-key.pem
-    mv wazuh-certificates/admin-key.pem /etc/wazuh-indexer/certs/
-    mv wazuh-certificates/admin.pem /etc/wazuh-indexer/certs/
-    cp wazuh-certificates/root-ca.pem /etc/wazuh-indexer/certs/
-    chmod 500 /etc/wazuh-indexer/certs
-    chmod 400 /etc/wazuh-indexer/certs/*
-    chown -R wazuh-indexer:wazuh-indexer /etc/wazuh-indexer/certs
+    mkdir /etc/cyb3rhq-indexer/certs
+    mv -n cyb3rhq-certificates/$NODE_NAME.pem /etc/cyb3rhq-indexer/certs/indexer.pem
+    mv -n cyb3rhq-certificates/$NODE_NAME-key.pem /etc/cyb3rhq-indexer/certs/indexer-key.pem
+    mv cyb3rhq-certificates/admin-key.pem /etc/cyb3rhq-indexer/certs/
+    mv cyb3rhq-certificates/admin.pem /etc/cyb3rhq-indexer/certs/
+    cp cyb3rhq-certificates/root-ca.pem /etc/cyb3rhq-indexer/certs/
+    chmod 500 /etc/cyb3rhq-indexer/certs
+    chmod 400 /etc/cyb3rhq-indexer/certs/*
+    chown -R cyb3rhq-indexer:cyb3rhq-indexer /etc/cyb3rhq-indexer/certs
 
-    sed -i 's|\(network.host: \)"0.0.0.0"|\1"127.0.0.1"|' /etc/wazuh-indexer/opensearch.yml
+    sed -i 's|\(network.host: \)"0.0.0.0"|\1"127.0.0.1"|' /etc/cyb3rhq-indexer/opensearch.yml
 
     if [ "${sys_type}" == "rpm" ]; then
-        runuser "wazuh-indexer" --shell="/bin/bash" --command="OPENSEARCH_PATH_CONF=/etc/wazuh-indexer /usr/share/wazuh-indexer/bin/opensearch" > /dev/null 2>&1 &
+        runuser "cyb3rhq-indexer" --shell="/bin/bash" --command="OPENSEARCH_PATH_CONF=/etc/cyb3rhq-indexer /usr/share/cyb3rhq-indexer/bin/opensearch" > /dev/null 2>&1 &
         sleep 5
     elif [ "${sys_type}" == "deb" ]; then
-        enable_start_service "wazuh-indexer"
+        enable_start_service "cyb3rhq-indexer"
     fi
 
     indexer_initialize
     sleep 10
     eval "curl -s -XGET https://127.0.0.1:9200 -u admin:admin -k --fail"
     if [ "${PIPESTATUS[0]}" != 0 ]; then
-        echo "ERROR: The Wazuh indexer installation has failed."
+        echo "ERROR: The Cyb3rhq indexer installation has failed."
         exit 1
     fi
 
@@ -296,22 +296,22 @@ function install_dependencies() {
 function install_package() {
 
     if [ "${sys_type}" == "deb" ]; then
-        dpkg -i ./wazuh-offline/wazuh-packages/"${1}"*.deb
+        dpkg -i ./cyb3rhq-offline/cyb3rhq-packages/"${1}"*.deb
     elif [ "${sys_type}" == "rpm" ]; then
-        rpm -ivh ./wazuh-offline/wazuh-packages/"${1}"*.rpm
+        rpm -ivh ./cyb3rhq-offline/cyb3rhq-packages/"${1}"*.rpm
     fi
 
 }
 
 function manager_installation() {
 
-    install_package "wazuh-manager"
-    check_package "wazuh-manager"
+    install_package "cyb3rhq-manager"
+    check_package "cyb3rhq-manager"
 
     if [ "${sys_type}" == "deb" ]; then
-        enable_start_service "wazuh-manager"
+        enable_start_service "cyb3rhq-manager"
     elif [ "${sys_type}" == "rpm" ]; then
-        /var/ossec/bin/wazuh-control start
+        /var/ossec/bin/cyb3rhq-control start
     fi
 
 }

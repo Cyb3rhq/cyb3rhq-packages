@@ -102,135 +102,135 @@ test-08-installCommon_installPrerequisites-apt-assert() {
     apt install apt-transport-https curl unzip wget libcap2-bin tar software-properties-common gnupg -y
 }
 
-function load-installCommon_addWazuhRepo() {
-    @load_function "${base_dir}/installCommon.sh" installCommon_addWazuhRepo
+function load-installCommon_addCyb3rhqRepo() {
+    @load_function "${base_dir}/installCommon.sh" installCommon_addCyb3rhqRepo
 }
 
-test-09-installCommon_addWazuhRepo-yum() {
-    load-installCommon_addWazuhRepo
+test-09-installCommon_addCyb3rhqRepo-yum() {
+    load-installCommon_addCyb3rhqRepo
     development=1
     sys_type="yum"
     debug=""
     repogpg=""
     releasever=""
-    @mocktrue echo -e '[wazuh]\ngpgcheck=1\ngpgkey=\nenabled=1\nname=EL-${releasever} - Wazuh\nbaseurl=/yum/\nprotect=1'
-    @mocktrue tee /etc/yum.repos.d/wazuh.repo
-    installCommon_addWazuhRepo
+    @mocktrue echo -e '[cyb3rhq]\ngpgcheck=1\ngpgkey=\nenabled=1\nname=EL-${releasever} - Cyb3rhq\nbaseurl=/yum/\nprotect=1'
+    @mocktrue tee /etc/yum.repos.d/cyb3rhq.repo
+    installCommon_addCyb3rhqRepo
 }
 
-test-09-installCommon_addWazuhRepo-yum-assert() {
-    rm -f /etc/yum.repos.d/wazuh.repo
+test-09-installCommon_addCyb3rhqRepo-yum-assert() {
+    rm -f /etc/yum.repos.d/cyb3rhq.repo
     rpm --import
 }
 
 
-test-10-installCommon_addWazuhRepo-apt() {
-    load-installCommon_addWazuhRepo
+test-10-installCommon_addCyb3rhqRepo-apt() {
+    load-installCommon_addCyb3rhqRepo
     development=1
     sys_type="apt-get"
     debug=""
     repogpg=""
     releasever=""
-    @rm /etc/yum.repos.d/wazuh.repo
-    @rm /etc/zypp/repos.d/wazuh.repo
-    @rm /etc/apt/sources.list.d/wazuh.list
+    @rm /etc/yum.repos.d/cyb3rhq.repo
+    @rm /etc/zypp/repos.d/cyb3rhq.repo
+    @rm /etc/apt/sources.list.d/cyb3rhq.list
     @mocktrue curl -s --max-time 300
     @mocktrue apt-key add -
     @mocktrue echo "deb /apt/  main"
-    @mocktrue tee /etc/apt/sources.list.d/wazuh.list
-    installCommon_addWazuhRepo
+    @mocktrue tee /etc/apt/sources.list.d/cyb3rhq.list
+    installCommon_addCyb3rhqRepo
 }
 
-test-10-installCommon_addWazuhRepo-apt-assert() {
-    rm -f /etc/apt/sources.list.d/wazuh.list
+test-10-installCommon_addCyb3rhqRepo-apt-assert() {
+    rm -f /etc/apt/sources.list.d/cyb3rhq.list
     apt-get update -q
 }
 
-test-11-installCommon_addWazuhRepo-apt-file-present() {
-    load-installCommon_addWazuhRepo
+test-11-installCommon_addCyb3rhqRepo-apt-file-present() {
+    load-installCommon_addCyb3rhqRepo
     development=""
     @mkdir -p /etc/yum.repos.d
-    @touch /etc/yum.repos.d/wazuh.repo
-    installCommon_addWazuhRepo
+    @touch /etc/yum.repos.d/cyb3rhq.repo
+    installCommon_addCyb3rhqRepo
     @assert-success
-    @rm /etc/yum.repos.d/wazuh.repo
+    @rm /etc/yum.repos.d/cyb3rhq.repo
 }
 
-test-12-installCommon_addWazuhRepo-yum-file-present() {
-    load-installCommon_addWazuhRepo
+test-12-installCommon_addCyb3rhqRepo-yum-file-present() {
+    load-installCommon_addCyb3rhqRepo
     development=""
     @mkdir -p /etc/apt/sources.list.d/
-    @touch /etc/apt/sources.list.d/wazuh.list
-    installCommon_addWazuhRepo
+    @touch /etc/apt/sources.list.d/cyb3rhq.list
+    installCommon_addCyb3rhqRepo
     @assert-success
-    @rm /etc/apt/sources.list.d/wazuh.list
+    @rm /etc/apt/sources.list.d/cyb3rhq.list
 }
 
-function load-installCommon_restoreWazuhrepo() {
-    @load_function "${base_dir}/installCommon.sh" installCommon_restoreWazuhrepo
+function load-installCommon_restoreCyb3rhqrepo() {
+    @load_function "${base_dir}/installCommon.sh" installCommon_restoreCyb3rhqrepo
 }
 
-test-13-installCommon_restoreWazuhrepo-no-dev() {
-    load-installCommon_restoreWazuhrepo
+test-13-installCommon_restoreCyb3rhqrepo-no-dev() {
+    load-installCommon_restoreCyb3rhqrepo
     development=""
-    installCommon_restoreWazuhrepo
+    installCommon_restoreCyb3rhqrepo
     @assert-success
 }
 
-test-14-installCommon_restoreWazuhrepo-yum() {
-    load-installCommon_restoreWazuhrepo
+test-14-installCommon_restoreCyb3rhqrepo-yum() {
+    load-installCommon_restoreCyb3rhqrepo
     development="1"
     sys_type="yum"
     @mkdir -p /etc/yum.repos.d
-    @touch /etc/yum.repos.d/wazuh.repo
-    installCommon_restoreWazuhrepo
-    @rm /etc/yum.repos.d/wazuh.repo
+    @touch /etc/yum.repos.d/cyb3rhq.repo
+    installCommon_restoreCyb3rhqrepo
+    @rm /etc/yum.repos.d/cyb3rhq.repo
 }
 
-test-14-installCommon_restoreWazuhrepo-yum-assert() {
-    sed -i 's/-dev//g' /etc/yum.repos.d/wazuh.repo
-    sed -i 's/pre-release/4.x/g' /etc/yum.repos.d/wazuh.repo
-    sed -i 's/unstable/stable/g' /etc/yum.repos.d/wazuh.repo
+test-14-installCommon_restoreCyb3rhqrepo-yum-assert() {
+    sed -i 's/-dev//g' /etc/yum.repos.d/cyb3rhq.repo
+    sed -i 's/pre-release/4.x/g' /etc/yum.repos.d/cyb3rhq.repo
+    sed -i 's/unstable/stable/g' /etc/yum.repos.d/cyb3rhq.repo
 }
 
-test-15-installCommon_restoreWazuhrepo-apt() {
-    load-installCommon_restoreWazuhrepo
+test-15-installCommon_restoreCyb3rhqrepo-apt() {
+    load-installCommon_restoreCyb3rhqrepo
     development="1"
     sys_type="apt-get"
     @mkdir -p /etc/apt/sources.list.d/
-    @touch /etc/apt/sources.list.d/wazuh.list
-    installCommon_restoreWazuhrepo
-    @rm /etc/apt/sources.list.d/wazuh.list
+    @touch /etc/apt/sources.list.d/cyb3rhq.list
+    installCommon_restoreCyb3rhqrepo
+    @rm /etc/apt/sources.list.d/cyb3rhq.list
 }
 
-test-15-installCommon_restoreWazuhrepo-apt-assert() {
-    sed -i 's/-dev//g' /etc/apt/sources.list.d/wazuh.list
-    sed -i 's/pre-release/4.x/g' /etc/apt/sources.list.d/wazuh.list
-    sed -i 's/unstable/stable/g' /etc/apt/sources.list.d/wazuh.list
+test-15-installCommon_restoreCyb3rhqrepo-apt-assert() {
+    sed -i 's/-dev//g' /etc/apt/sources.list.d/cyb3rhq.list
+    sed -i 's/pre-release/4.x/g' /etc/apt/sources.list.d/cyb3rhq.list
+    sed -i 's/unstable/stable/g' /etc/apt/sources.list.d/cyb3rhq.list
 }
 
 
-test-16-installCommon_restoreWazuhrepo-yum-no-file() {
-    load-installCommon_restoreWazuhrepo
+test-16-installCommon_restoreCyb3rhqrepo-yum-no-file() {
+    load-installCommon_restoreCyb3rhqrepo
     development="1"
     sys_type="yum"
-    installCommon_restoreWazuhrepo
+    installCommon_restoreCyb3rhqrepo
 }
 
-test-16-installCommon_restoreWazuhrepo-yum-no-file-assert() {
+test-16-installCommon_restoreCyb3rhqrepo-yum-no-file-assert() {
     sed -i 's/-dev//g'
     sed -i 's/pre-release/4.x/g'
     sed -i 's/unstable/stable/g'
 }
 
-test-17-installCommon_restoreWazuhrepo-apt-no-file() {
-    load-installCommon_restoreWazuhrepo
+test-17-installCommon_restoreCyb3rhqrepo-apt-no-file() {
+    load-installCommon_restoreCyb3rhqrepo
     development="1"
     sys_type="yum"
-    installCommon_restoreWazuhrepo
+    installCommon_restoreCyb3rhqrepo
 }
 
-test-17-installCommon_restoreWazuhrepo-apt-no-file-assert() {
+test-17-installCommon_restoreCyb3rhqrepo-apt-no-file-assert() {
     sed -i 's/-dev//g'
     sed -i 's/pre-release/4.x/g'
     sed -i 's/unstable/stable/g'
@@ -258,10 +258,10 @@ function load-installCommon_rollBack {
 test-19-installCommon_rollBack-aio-all-installed-yum() {
     load-installCommon_rollBack
     indexer_installed=1
-    wazuh_installed=1
+    cyb3rhq_installed=1
     dashboard_installed=1
     filebeat_installed=1
-    wazuh_remaining_files=1
+    cyb3rhq_remaining_files=1
     indexer_remaining_files=1
     dashboard_remaining_files=1
     filebeat_remaining_files=1
@@ -273,15 +273,15 @@ test-19-installCommon_rollBack-aio-all-installed-yum() {
 
 test-19-installCommon_rollBack-aio-all-installed-yum-assert() {
 
-    yum remove wazuh-manager -y
+    yum remove cyb3rhq-manager -y
 
     rm -rf /var/ossec/
 
-    yum remove wazuh-indexer -y
+    yum remove cyb3rhq-indexer -y
 
-    rm -rf /var/lib/wazuh-indexer/
-    rm -rf /usr/share/wazuh-indexer/
-    rm -rf /etc/wazuh-indexer/
+    rm -rf /var/lib/cyb3rhq-indexer/
+    rm -rf /usr/share/cyb3rhq-indexer/
+    rm -rf /etc/cyb3rhq-indexer/
 
     yum remove filebeat -y
 
@@ -289,23 +289,23 @@ test-19-installCommon_rollBack-aio-all-installed-yum-assert() {
     rm -rf /usr/share/filebeat/
     rm -rf /etc/filebeat/
 
-    yum remove wazuh-dashboard -y
+    yum remove cyb3rhq-dashboard -y
 
-    rm -rf /var/lib/wazuh-dashboard/
-    rm -rf /usr/share/wazuh-dashboard/
-    rm -rf /etc/wazuh-dashboard/
-    rm -rf /run/wazuh-dashboard/
+    rm -rf /var/lib/cyb3rhq-dashboard/
+    rm -rf /usr/share/cyb3rhq-dashboard/
+    rm -rf /etc/cyb3rhq-dashboard/
+    rm -rf /run/cyb3rhq-dashboard/
 
-    rm  -rf /var/log/wazuh-indexer/ /var/log/filebeat/ /etc/systemd/system/opensearch.service.wants/ /securityadmin_demo.sh /etc/systemd/system/multi-user.target.wants/wazuh-manager.service /etc/systemd/system/multi-user.target.wants/filebeat.service /etc/systemd/system/multi-user.target.wants/opensearch.service /etc/systemd/system/multi-user.target.wants/wazuh-dashboard.service /etc/systemd/system/wazuh-dashboard.service /lib/firewalld/services/dashboard.xml /lib/firewalld/services/opensearch.xml
+    rm  -rf /var/log/cyb3rhq-indexer/ /var/log/filebeat/ /etc/systemd/system/opensearch.service.wants/ /securityadmin_demo.sh /etc/systemd/system/multi-user.target.wants/cyb3rhq-manager.service /etc/systemd/system/multi-user.target.wants/filebeat.service /etc/systemd/system/multi-user.target.wants/opensearch.service /etc/systemd/system/multi-user.target.wants/cyb3rhq-dashboard.service /etc/systemd/system/cyb3rhq-dashboard.service /lib/firewalld/services/dashboard.xml /lib/firewalld/services/opensearch.xml
 }
 
 test-20-installCommon_rollBack-aio-all-installed-apt() {
     load-installCommon_rollBack
     indexer_installed=1
-    wazuh_installed=1
+    cyb3rhq_installed=1
     dashboard_installed=1
     filebeat_installed=1
-    wazuh_remaining_files=1
+    cyb3rhq_remaining_files=1
     indexer_remaining_files=1
     dashboard_remaining_files=1
     filebeat_remaining_files=1
@@ -316,15 +316,15 @@ test-20-installCommon_rollBack-aio-all-installed-apt() {
 }
 
 test-20-installCommon_rollBack-aio-all-installed-apt-assert() {
-    apt remove --purge wazuh-manager -y
+    apt remove --purge cyb3rhq-manager -y
 
     rm -rf /var/ossec/
 
-    apt remove --purge ^wazuh-indexer -y
+    apt remove --purge ^cyb3rhq-indexer -y
 
-    rm -rf /var/lib/wazuh-indexer/
-    rm -rf /usr/share/wazuh-indexer/
-    rm -rf /etc/wazuh-indexer/
+    rm -rf /var/lib/cyb3rhq-indexer/
+    rm -rf /usr/share/cyb3rhq-indexer/
+    rm -rf /etc/cyb3rhq-indexer/
 
     apt remove --purge filebeat -y
 
@@ -332,23 +332,23 @@ test-20-installCommon_rollBack-aio-all-installed-apt-assert() {
     rm -rf /usr/share/filebeat/
     rm -rf /etc/filebeat/
 
-    apt remove --purge wazuh-dashboard -y
+    apt remove --purge cyb3rhq-dashboard -y
 
-    rm -rf /var/lib/wazuh-dashboard/
-    rm -rf /usr/share/wazuh-dashboard/
-    rm -rf /etc/wazuh-dashboard/
-    rm -rf /run/wazuh-dashboard/
+    rm -rf /var/lib/cyb3rhq-dashboard/
+    rm -rf /usr/share/cyb3rhq-dashboard/
+    rm -rf /etc/cyb3rhq-dashboard/
+    rm -rf /run/cyb3rhq-dashboard/
 
-    rm  -rf /var/log/wazuh-indexer/ /var/log/filebeat/ /etc/systemd/system/opensearch.service.wants/ /securityadmin_demo.sh /etc/systemd/system/multi-user.target.wants/wazuh-manager.service /etc/systemd/system/multi-user.target.wants/filebeat.service /etc/systemd/system/multi-user.target.wants/opensearch.service /etc/systemd/system/multi-user.target.wants/wazuh-dashboard.service /etc/systemd/system/wazuh-dashboard.service /lib/firewalld/services/dashboard.xml /lib/firewalld/services/opensearch.xml
+    rm  -rf /var/log/cyb3rhq-indexer/ /var/log/filebeat/ /etc/systemd/system/opensearch.service.wants/ /securityadmin_demo.sh /etc/systemd/system/multi-user.target.wants/cyb3rhq-manager.service /etc/systemd/system/multi-user.target.wants/filebeat.service /etc/systemd/system/multi-user.target.wants/opensearch.service /etc/systemd/system/multi-user.target.wants/cyb3rhq-dashboard.service /etc/systemd/system/cyb3rhq-dashboard.service /lib/firewalld/services/dashboard.xml /lib/firewalld/services/opensearch.xml
 }
 
 test-21-installCommon_rollBack-indexer-installation-all-installed-yum() {
     load-installCommon_rollBack
     indexer_installed=1
-    wazuh_installed=1
+    cyb3rhq_installed=1
     dashboard_installed=1
     filebeat_installed=1
-    wazuh_remaining_files=1
+    cyb3rhq_remaining_files=1
     indexer_remaining_files=1
     dashboard_remaining_files=1
     filebeat_remaining_files=1
@@ -359,22 +359,22 @@ test-21-installCommon_rollBack-indexer-installation-all-installed-yum() {
 }
 
 test-21-installCommon_rollBack-indexer-installation-all-installed-yum-assert() {
-    yum remove wazuh-indexer -y
+    yum remove cyb3rhq-indexer -y
 
-    rm -rf /var/lib/wazuh-indexer/
-    rm -rf /usr/share/wazuh-indexer/
-    rm -rf /etc/wazuh-indexer/
+    rm -rf /var/lib/cyb3rhq-indexer/
+    rm -rf /usr/share/cyb3rhq-indexer/
+    rm -rf /etc/cyb3rhq-indexer/
 
-    rm  -rf /var/log/wazuh-indexer/ /var/log/filebeat/ /etc/systemd/system/opensearch.service.wants/ /securityadmin_demo.sh /etc/systemd/system/multi-user.target.wants/wazuh-manager.service /etc/systemd/system/multi-user.target.wants/filebeat.service /etc/systemd/system/multi-user.target.wants/opensearch.service /etc/systemd/system/multi-user.target.wants/wazuh-dashboard.service /etc/systemd/system/wazuh-dashboard.service /lib/firewalld/services/dashboard.xml /lib/firewalld/services/opensearch.xml
+    rm  -rf /var/log/cyb3rhq-indexer/ /var/log/filebeat/ /etc/systemd/system/opensearch.service.wants/ /securityadmin_demo.sh /etc/systemd/system/multi-user.target.wants/cyb3rhq-manager.service /etc/systemd/system/multi-user.target.wants/filebeat.service /etc/systemd/system/multi-user.target.wants/opensearch.service /etc/systemd/system/multi-user.target.wants/cyb3rhq-dashboard.service /etc/systemd/system/cyb3rhq-dashboard.service /lib/firewalld/services/dashboard.xml /lib/firewalld/services/opensearch.xml
 }
 
 test-22-installCommon_rollBack-indexer-installation-all-installed-apt() {
     load-installCommon_rollBack
     indexer_installed=1
-    wazuh_installed=1
+    cyb3rhq_installed=1
     dashboard_installed=1
     filebeat_installed=1
-    wazuh_remaining_files=1
+    cyb3rhq_remaining_files=1
     indexer_remaining_files=1
     dashboard_remaining_files=1
     filebeat_remaining_files=1
@@ -385,33 +385,33 @@ test-22-installCommon_rollBack-indexer-installation-all-installed-apt() {
 }
 
 test-22-installCommon_rollBack-indexer-installation-all-installed-apt-assert() {
-    apt remove --purge ^wazuh-indexer -y
+    apt remove --purge ^cyb3rhq-indexer -y
 
-    rm -rf /var/lib/wazuh-indexer/
-    rm -rf /usr/share/wazuh-indexer/
-    rm -rf /etc/wazuh-indexer/
+    rm -rf /var/lib/cyb3rhq-indexer/
+    rm -rf /usr/share/cyb3rhq-indexer/
+    rm -rf /etc/cyb3rhq-indexer/
 
-    rm  -rf /var/log/wazuh-indexer/ /var/log/filebeat/ /etc/systemd/system/opensearch.service.wants/ /securityadmin_demo.sh /etc/systemd/system/multi-user.target.wants/wazuh-manager.service /etc/systemd/system/multi-user.target.wants/filebeat.service /etc/systemd/system/multi-user.target.wants/opensearch.service /etc/systemd/system/multi-user.target.wants/wazuh-dashboard.service /etc/systemd/system/wazuh-dashboard.service /lib/firewalld/services/dashboard.xml /lib/firewalld/services/opensearch.xml
+    rm  -rf /var/log/cyb3rhq-indexer/ /var/log/filebeat/ /etc/systemd/system/opensearch.service.wants/ /securityadmin_demo.sh /etc/systemd/system/multi-user.target.wants/cyb3rhq-manager.service /etc/systemd/system/multi-user.target.wants/filebeat.service /etc/systemd/system/multi-user.target.wants/opensearch.service /etc/systemd/system/multi-user.target.wants/cyb3rhq-dashboard.service /etc/systemd/system/cyb3rhq-dashboard.service /lib/firewalld/services/dashboard.xml /lib/firewalld/services/opensearch.xml
 }
 
-test-23-installCommon_rollBack-wazuh-installation-all-installed-yum() {
+test-23-installCommon_rollBack-cyb3rhq-installation-all-installed-yum() {
     load-installCommon_rollBack
     indexer_installed=1
-    wazuh_installed=1
+    cyb3rhq_installed=1
     dashboard_installed=1
     filebeat_installed=1
-    wazuh_remaining_files=1
+    cyb3rhq_remaining_files=1
     indexer_remaining_files=1
     dashboard_remaining_files=1
     filebeat_remaining_files=1
     sys_type="yum"
     debug=
-    wazuh=1
+    cyb3rhq=1
     installCommon_rollBack
 }
 
-test-23-installCommon_rollBack-wazuh-installation-all-installed-yum-assert() {
-    yum remove wazuh-manager -y
+test-23-installCommon_rollBack-cyb3rhq-installation-all-installed-yum-assert() {
+    yum remove cyb3rhq-manager -y
 
     rm -rf /var/ossec/
 
@@ -421,27 +421,27 @@ test-23-installCommon_rollBack-wazuh-installation-all-installed-yum-assert() {
     rm -rf /usr/share/filebeat/
     rm -rf /etc/filebeat/
 
-    rm  -rf /var/log/wazuh-indexer/ /var/log/filebeat/ /etc/systemd/system/opensearch.service.wants/ /securityadmin_demo.sh /etc/systemd/system/multi-user.target.wants/wazuh-manager.service /etc/systemd/system/multi-user.target.wants/filebeat.service /etc/systemd/system/multi-user.target.wants/opensearch.service /etc/systemd/system/multi-user.target.wants/wazuh-dashboard.service /etc/systemd/system/wazuh-dashboard.service /lib/firewalld/services/dashboard.xml /lib/firewalld/services/opensearch.xml
+    rm  -rf /var/log/cyb3rhq-indexer/ /var/log/filebeat/ /etc/systemd/system/opensearch.service.wants/ /securityadmin_demo.sh /etc/systemd/system/multi-user.target.wants/cyb3rhq-manager.service /etc/systemd/system/multi-user.target.wants/filebeat.service /etc/systemd/system/multi-user.target.wants/opensearch.service /etc/systemd/system/multi-user.target.wants/cyb3rhq-dashboard.service /etc/systemd/system/cyb3rhq-dashboard.service /lib/firewalld/services/dashboard.xml /lib/firewalld/services/opensearch.xml
 }
 
-test-24-installCommon_rollBack-wazuh-installation-all-installed-apt() {
+test-24-installCommon_rollBack-cyb3rhq-installation-all-installed-apt() {
     load-installCommon_rollBack
     indexer_installed=1
-    wazuh_installed=1
+    cyb3rhq_installed=1
     dashboard_installed=1
     filebeat_installed=1
-    wazuh_remaining_files=1
+    cyb3rhq_remaining_files=1
     indexer_remaining_files=1
     dashboard_remaining_files=1
     filebeat_remaining_files=1
     sys_type="apt-get"
     debug=
-    wazuh=1
+    cyb3rhq=1
     installCommon_rollBack
 }
 
-test-24-installCommon_rollBack-wazuh-installation-all-installed-apt-assert() {
-    apt remove --purge wazuh-manager -y
+test-24-installCommon_rollBack-cyb3rhq-installation-all-installed-apt-assert() {
+    apt remove --purge cyb3rhq-manager -y
 
     rm -rf /var/ossec/
 
@@ -451,16 +451,16 @@ test-24-installCommon_rollBack-wazuh-installation-all-installed-apt-assert() {
     rm -rf /usr/share/filebeat/
     rm -rf /etc/filebeat/
 
-    rm  -rf /var/log/wazuh-indexer/ /var/log/filebeat/ /etc/systemd/system/opensearch.service.wants/ /securityadmin_demo.sh /etc/systemd/system/multi-user.target.wants/wazuh-manager.service /etc/systemd/system/multi-user.target.wants/filebeat.service /etc/systemd/system/multi-user.target.wants/opensearch.service /etc/systemd/system/multi-user.target.wants/wazuh-dashboard.service /etc/systemd/system/wazuh-dashboard.service /lib/firewalld/services/dashboard.xml /lib/firewalld/services/opensearch.xml
+    rm  -rf /var/log/cyb3rhq-indexer/ /var/log/filebeat/ /etc/systemd/system/opensearch.service.wants/ /securityadmin_demo.sh /etc/systemd/system/multi-user.target.wants/cyb3rhq-manager.service /etc/systemd/system/multi-user.target.wants/filebeat.service /etc/systemd/system/multi-user.target.wants/opensearch.service /etc/systemd/system/multi-user.target.wants/cyb3rhq-dashboard.service /etc/systemd/system/cyb3rhq-dashboard.service /lib/firewalld/services/dashboard.xml /lib/firewalld/services/opensearch.xml
 }
 
 test-25-installCommon_rollBack-dashboard-installation-all-installed-yum() {
     load-installCommon_rollBack
     indexer_installed=1
-    wazuh_installed=1
+    cyb3rhq_installed=1
     dashboard_installed=1
     filebeat_installed=1
-    wazuh_remaining_files=1
+    cyb3rhq_remaining_files=1
     indexer_remaining_files=1
     dashboard_remaining_files=1
     filebeat_remaining_files=1
@@ -471,23 +471,23 @@ test-25-installCommon_rollBack-dashboard-installation-all-installed-yum() {
 }
 
 test-25-installCommon_rollBack-dashboard-installation-all-installed-yum-assert() {
-    yum remove wazuh-dashboard -y
+    yum remove cyb3rhq-dashboard -y
 
-    rm -rf /var/lib/wazuh-dashboard/
-    rm -rf /usr/share/wazuh-dashboard/
-    rm -rf /etc/wazuh-dashboard/
-    rm -rf /run/wazuh-dashboard/
+    rm -rf /var/lib/cyb3rhq-dashboard/
+    rm -rf /usr/share/cyb3rhq-dashboard/
+    rm -rf /etc/cyb3rhq-dashboard/
+    rm -rf /run/cyb3rhq-dashboard/
 
-    rm  -rf /var/log/wazuh-indexer/ /var/log/filebeat/ /etc/systemd/system/opensearch.service.wants/ /securityadmin_demo.sh /etc/systemd/system/multi-user.target.wants/wazuh-manager.service /etc/systemd/system/multi-user.target.wants/filebeat.service /etc/systemd/system/multi-user.target.wants/opensearch.service /etc/systemd/system/multi-user.target.wants/wazuh-dashboard.service /etc/systemd/system/wazuh-dashboard.service /lib/firewalld/services/dashboard.xml /lib/firewalld/services/opensearch.xml
+    rm  -rf /var/log/cyb3rhq-indexer/ /var/log/filebeat/ /etc/systemd/system/opensearch.service.wants/ /securityadmin_demo.sh /etc/systemd/system/multi-user.target.wants/cyb3rhq-manager.service /etc/systemd/system/multi-user.target.wants/filebeat.service /etc/systemd/system/multi-user.target.wants/opensearch.service /etc/systemd/system/multi-user.target.wants/cyb3rhq-dashboard.service /etc/systemd/system/cyb3rhq-dashboard.service /lib/firewalld/services/dashboard.xml /lib/firewalld/services/opensearch.xml
 }
 
 test-26-installCommon_rollBack-dashboard-installation-all-installed-apt() {
     load-installCommon_rollBack
     indexer_installed=1
-    wazuh_installed=1
+    cyb3rhq_installed=1
     dashboard_installed=1
     filebeat_installed=1
-    wazuh_remaining_files=1
+    cyb3rhq_remaining_files=1
     indexer_remaining_files=1
     dashboard_remaining_files=1
     filebeat_remaining_files=1
@@ -498,23 +498,23 @@ test-26-installCommon_rollBack-dashboard-installation-all-installed-apt() {
 }
 
 test-26-installCommon_rollBack-dashboard-installation-all-installed-apt-assert() {
-    apt remove --purge wazuh-dashboard -y
+    apt remove --purge cyb3rhq-dashboard -y
 
-    rm -rf /var/lib/wazuh-dashboard/
-    rm -rf /usr/share/wazuh-dashboard/
-    rm -rf /etc/wazuh-dashboard/
-    rm -rf /run/wazuh-dashboard/
+    rm -rf /var/lib/cyb3rhq-dashboard/
+    rm -rf /usr/share/cyb3rhq-dashboard/
+    rm -rf /etc/cyb3rhq-dashboard/
+    rm -rf /run/cyb3rhq-dashboard/
 
-    rm  -rf /var/log/wazuh-indexer/ /var/log/filebeat/ /etc/systemd/system/opensearch.service.wants/ /securityadmin_demo.sh /etc/systemd/system/multi-user.target.wants/wazuh-manager.service /etc/systemd/system/multi-user.target.wants/filebeat.service /etc/systemd/system/multi-user.target.wants/opensearch.service /etc/systemd/system/multi-user.target.wants/wazuh-dashboard.service /etc/systemd/system/wazuh-dashboard.service /lib/firewalld/services/dashboard.xml /lib/firewalld/services/opensearch.xml
+    rm  -rf /var/log/cyb3rhq-indexer/ /var/log/filebeat/ /etc/systemd/system/opensearch.service.wants/ /securityadmin_demo.sh /etc/systemd/system/multi-user.target.wants/cyb3rhq-manager.service /etc/systemd/system/multi-user.target.wants/filebeat.service /etc/systemd/system/multi-user.target.wants/opensearch.service /etc/systemd/system/multi-user.target.wants/cyb3rhq-dashboard.service /etc/systemd/system/cyb3rhq-dashboard.service /lib/firewalld/services/dashboard.xml /lib/firewalld/services/opensearch.xml
 }
 
 test-27-installCommon_rollBack-aio-nothing-installed() {
     load-installCommon_rollBack
     indexer_installed=
-    wazuh_installed=
+    cyb3rhq_installed=
     dashboard_installed=
     filebeat_installed=
-    wazuh_remaining_files=
+    cyb3rhq_remaining_files=
     indexer_remaining_files=
     dashboard_remaining_files=
     filebeat_remaining_files=
@@ -528,10 +528,10 @@ test-27-installCommon_rollBack-aio-nothing-installed() {
 test-28-installCommon_rollBack-aio-all-remaining-files-yum() {
     load-installCommon_rollBack
     indexer_installed=
-    wazuh_installed=
+    cyb3rhq_installed=
     dashboard_installed=
     filebeat_installed=
-    wazuh_remaining_files=1
+    cyb3rhq_remaining_files=1
     indexer_remaining_files=1
     dashboard_remaining_files=1
     filebeat_remaining_files=1
@@ -544,29 +544,29 @@ test-28-installCommon_rollBack-aio-all-remaining-files-yum() {
 test-28-installCommon_rollBack-aio-all-remaining-files-yum-assert() {
     rm -rf /var/ossec/
 
-    rm -rf /var/lib/wazuh-indexer/
-    rm -rf /usr/share/wazuh-indexer/
-    rm -rf /etc/wazuh-indexer/
+    rm -rf /var/lib/cyb3rhq-indexer/
+    rm -rf /usr/share/cyb3rhq-indexer/
+    rm -rf /etc/cyb3rhq-indexer/
 
     rm -rf /var/lib/filebeat/
     rm -rf /usr/share/filebeat/
     rm -rf /etc/filebeat/
 
-    rm -rf /var/lib/wazuh-dashboard/
-    rm -rf /usr/share/wazuh-dashboard/
-    rm -rf /etc/wazuh-dashboard/
-    rm -rf /run/wazuh-dashboard/
+    rm -rf /var/lib/cyb3rhq-dashboard/
+    rm -rf /usr/share/cyb3rhq-dashboard/
+    rm -rf /etc/cyb3rhq-dashboard/
+    rm -rf /run/cyb3rhq-dashboard/
 
-    rm  -rf /var/log/wazuh-indexer/ /var/log/filebeat/ /etc/systemd/system/opensearch.service.wants/ /securityadmin_demo.sh /etc/systemd/system/multi-user.target.wants/wazuh-manager.service /etc/systemd/system/multi-user.target.wants/filebeat.service /etc/systemd/system/multi-user.target.wants/opensearch.service /etc/systemd/system/multi-user.target.wants/wazuh-dashboard.service /etc/systemd/system/wazuh-dashboard.service /lib/firewalld/services/dashboard.xml /lib/firewalld/services/opensearch.xml
+    rm  -rf /var/log/cyb3rhq-indexer/ /var/log/filebeat/ /etc/systemd/system/opensearch.service.wants/ /securityadmin_demo.sh /etc/systemd/system/multi-user.target.wants/cyb3rhq-manager.service /etc/systemd/system/multi-user.target.wants/filebeat.service /etc/systemd/system/multi-user.target.wants/opensearch.service /etc/systemd/system/multi-user.target.wants/cyb3rhq-dashboard.service /etc/systemd/system/cyb3rhq-dashboard.service /lib/firewalld/services/dashboard.xml /lib/firewalld/services/opensearch.xml
 }
 
 test-29-installCommon_rollBack-aio-all-remaining-files-apt() {
     load-installCommon_rollBack
     indexer_installed=
-    wazuh_installed=
+    cyb3rhq_installed=
     dashboard_installed=
     filebeat_installed=
-    wazuh_remaining_files=1
+    cyb3rhq_remaining_files=1
     indexer_remaining_files=1
     dashboard_remaining_files=1
     filebeat_remaining_files=1
@@ -579,48 +579,48 @@ test-29-installCommon_rollBack-aio-all-remaining-files-apt() {
 test-29-installCommon_rollBack-aio-all-remaining-files-apt-assert() {
     rm -rf /var/ossec/
 
-    rm -rf /var/lib/wazuh-indexer/
-    rm -rf /usr/share/wazuh-indexer/
-    rm -rf /etc/wazuh-indexer/
+    rm -rf /var/lib/cyb3rhq-indexer/
+    rm -rf /usr/share/cyb3rhq-indexer/
+    rm -rf /etc/cyb3rhq-indexer/
 
     rm -rf /var/lib/filebeat/
     rm -rf /usr/share/filebeat/
     rm -rf /etc/filebeat/
 
-    rm -rf /var/lib/wazuh-dashboard/
-    rm -rf /usr/share/wazuh-dashboard/
-    rm -rf /etc/wazuh-dashboard/
-    rm -rf /run/wazuh-dashboard/
+    rm -rf /var/lib/cyb3rhq-dashboard/
+    rm -rf /usr/share/cyb3rhq-dashboard/
+    rm -rf /etc/cyb3rhq-dashboard/
+    rm -rf /run/cyb3rhq-dashboard/
 
-    rm  -rf /var/log/wazuh-indexer/ /var/log/filebeat/ /etc/systemd/system/opensearch.service.wants/ /securityadmin_demo.sh /etc/systemd/system/multi-user.target.wants/wazuh-manager.service /etc/systemd/system/multi-user.target.wants/filebeat.service /etc/systemd/system/multi-user.target.wants/opensearch.service /etc/systemd/system/multi-user.target.wants/wazuh-dashboard.service /etc/systemd/system/wazuh-dashboard.service /lib/firewalld/services/dashboard.xml /lib/firewalld/services/opensearch.xml
+    rm  -rf /var/log/cyb3rhq-indexer/ /var/log/filebeat/ /etc/systemd/system/opensearch.service.wants/ /securityadmin_demo.sh /etc/systemd/system/multi-user.target.wants/cyb3rhq-manager.service /etc/systemd/system/multi-user.target.wants/filebeat.service /etc/systemd/system/multi-user.target.wants/opensearch.service /etc/systemd/system/multi-user.target.wants/cyb3rhq-dashboard.service /etc/systemd/system/cyb3rhq-dashboard.service /lib/firewalld/services/dashboard.xml /lib/firewalld/services/opensearch.xml
 }
 
 test-30-installCommon_rollBack-nothing-installed-remove-yum-repo() {
     load-installCommon_rollBack
     @mkdir -p /etc/yum.repos.d
-    @touch /etc/yum.repos.d/wazuh.repo
+    @touch /etc/yum.repos.d/cyb3rhq.repo
     installCommon_rollBack
-    @rm /etc/yum.repos.d/wazuh.repo
+    @rm /etc/yum.repos.d/cyb3rhq.repo
 }
 
 test-30-installCommon_rollBack-nothing-installed-remove-yum-repo-assert() {
-    rm /etc/yum.repos.d/wazuh.repo
+    rm /etc/yum.repos.d/cyb3rhq.repo
 
-    rm  -rf /var/log/wazuh-indexer/ /var/log/filebeat/ /etc/systemd/system/opensearch.service.wants/ /securityadmin_demo.sh /etc/systemd/system/multi-user.target.wants/wazuh-manager.service /etc/systemd/system/multi-user.target.wants/filebeat.service /etc/systemd/system/multi-user.target.wants/opensearch.service /etc/systemd/system/multi-user.target.wants/wazuh-dashboard.service /etc/systemd/system/wazuh-dashboard.service /lib/firewalld/services/dashboard.xml /lib/firewalld/services/opensearch.xml
+    rm  -rf /var/log/cyb3rhq-indexer/ /var/log/filebeat/ /etc/systemd/system/opensearch.service.wants/ /securityadmin_demo.sh /etc/systemd/system/multi-user.target.wants/cyb3rhq-manager.service /etc/systemd/system/multi-user.target.wants/filebeat.service /etc/systemd/system/multi-user.target.wants/opensearch.service /etc/systemd/system/multi-user.target.wants/cyb3rhq-dashboard.service /etc/systemd/system/cyb3rhq-dashboard.service /lib/firewalld/services/dashboard.xml /lib/firewalld/services/opensearch.xml
 }
 
 test-31-installCommon_rollBack-nothing-installed-remove-apt-repo() {
     load-installCommon_rollBack
     @mkdir -p /etc/apt/sources.list.d
-    @touch /etc/apt/sources.list.d/wazuh.list
+    @touch /etc/apt/sources.list.d/cyb3rhq.list
     installCommon_rollBack
-    @rm /etc/apt/sources.list.d/wazuh.list
+    @rm /etc/apt/sources.list.d/cyb3rhq.list
 }
 
 test-31-installCommon_rollBack-nothing-installed-remove-apt-repo-assert() {
-    rm /etc/apt/sources.list.d/wazuh.list
+    rm /etc/apt/sources.list.d/cyb3rhq.list
 
-    rm  -rf /var/log/wazuh-indexer/ /var/log/filebeat/ /etc/systemd/system/opensearch.service.wants/ /securityadmin_demo.sh /etc/systemd/system/multi-user.target.wants/wazuh-manager.service /etc/systemd/system/multi-user.target.wants/filebeat.service /etc/systemd/system/multi-user.target.wants/opensearch.service /etc/systemd/system/multi-user.target.wants/wazuh-dashboard.service /etc/systemd/system/wazuh-dashboard.service /lib/firewalld/services/dashboard.xml /lib/firewalld/services/opensearch.xml
+    rm  -rf /var/log/cyb3rhq-indexer/ /var/log/filebeat/ /etc/systemd/system/opensearch.service.wants/ /securityadmin_demo.sh /etc/systemd/system/multi-user.target.wants/cyb3rhq-manager.service /etc/systemd/system/multi-user.target.wants/filebeat.service /etc/systemd/system/multi-user.target.wants/opensearch.service /etc/systemd/system/multi-user.target.wants/cyb3rhq-dashboard.service /etc/systemd/system/cyb3rhq-dashboard.service /lib/firewalld/services/dashboard.xml /lib/firewalld/services/opensearch.xml
 }
 
 test-32-installCommon_rollBack-nothing-installed-remove-files() {
@@ -631,7 +631,7 @@ test-32-installCommon_rollBack-nothing-installed-remove-files() {
 }
 
 test-32-installCommon_rollBack-nothing-installed-remove-files-assert() {
-    rm  -rf /var/log/wazuh-indexer/ /var/log/filebeat/ /etc/systemd/system/opensearch.service.wants/ /securityadmin_demo.sh /etc/systemd/system/multi-user.target.wants/wazuh-manager.service /etc/systemd/system/multi-user.target.wants/filebeat.service /etc/systemd/system/multi-user.target.wants/opensearch.service /etc/systemd/system/multi-user.target.wants/wazuh-dashboard.service /etc/systemd/system/wazuh-dashboard.service /lib/firewalld/services/dashboard.xml /lib/firewalld/services/opensearch.xml
+    rm  -rf /var/log/cyb3rhq-indexer/ /var/log/filebeat/ /etc/systemd/system/opensearch.service.wants/ /securityadmin_demo.sh /etc/systemd/system/multi-user.target.wants/cyb3rhq-manager.service /etc/systemd/system/multi-user.target.wants/filebeat.service /etc/systemd/system/multi-user.target.wants/opensearch.service /etc/systemd/system/multi-user.target.wants/cyb3rhq-dashboard.service /etc/systemd/system/cyb3rhq-dashboard.service /lib/firewalld/services/dashboard.xml /lib/firewalld/services/opensearch.xml
 }
 
 function load-installCommon_createCertificates() {
@@ -695,17 +695,17 @@ test-36-installCommon_changePasswords-with-tarfile() {
     tar_file=tarfile.tar
     base_path=/tmp
     @touch $tar_file
-    @mock tar -xf tarfile.tar -C /tmp wazuh-install-files/wazuh-passwords.txt === @touch /tmp/wazuh-passwords.txt
+    @mock tar -xf tarfile.tar -C /tmp cyb3rhq-install-files/cyb3rhq-passwords.txt === @touch /tmp/cyb3rhq-passwords.txt
     installCommon_changePasswords
     @echo $changeall
-    @rm /tmp/wazuh-passwords.txt
+    @rm /tmp/cyb3rhq-passwords.txt
 }
 
 test-36-installCommon_changePasswords-with-tarfile-assert() {
     common_checkInstalled
     installCommon_readPasswordFileUsers
     passwords_changePassword
-    rm -rf /tmp/wazuh-passwords.txt
+    rm -rf /tmp/cyb3rhq-passwords.txt
     @echo
 }
 
@@ -715,10 +715,10 @@ test-37-installCommon_changePasswords-with-tarfile-aio() {
     base_path=/tmp
     AIO=1
     @touch $tar_file
-    @mock tar -xf tarfile.tar -C /tmp wazuh-install-files/wazuh-passwords.txt === @touch /tmp/wazuh-passwords.txt
+    @mock tar -xf tarfile.tar -C /tmp cyb3rhq-install-files/cyb3rhq-passwords.txt === @touch /tmp/cyb3rhq-passwords.txt
     installCommon_changePasswords
     @echo $changeall
-    @rm /tmp/wazuh-passwords.txt
+    @rm /tmp/cyb3rhq-passwords.txt
 }
 
 test-37-installCommon_changePasswords-with-tarfile-aio-assert() {
@@ -730,7 +730,7 @@ test-37-installCommon_changePasswords-with-tarfile-aio-assert() {
     passwords_generateHash
     passwords_changePassword
     passwords_runSecurityAdmin
-    rm -rf /tmp/wazuh-passwords.txt
+    rm -rf /tmp/cyb3rhq-passwords.txt
     @echo 1
 }
 
@@ -740,10 +740,10 @@ test-38-installCommon_changePasswords-with-tarfile-start-elastic-cluster() {
     base_path=/tmp
     AIO=1
     @touch $tar_file
-    @mock tar -xf tarfile.tar -C /tmp wazuh-install-files/wazuh-passwords.txt === @touch /tmp/wazuh-passwords.txt
+    @mock tar -xf tarfile.tar -C /tmp cyb3rhq-install-files/cyb3rhq-passwords.txt === @touch /tmp/cyb3rhq-passwords.txt
     installCommon_changePasswords
     @echo $changeall
-    @rm /tmp/wazuh-passwords.txt
+    @rm /tmp/cyb3rhq-passwords.txt
 }
 
 test-38-installCommon_changePasswords-with-tarfile-start-elastic-cluster-assert() {
@@ -755,7 +755,7 @@ test-38-installCommon_changePasswords-with-tarfile-start-elastic-cluster-assert(
     passwords_generateHash
     passwords_changePassword
     passwords_runSecurityAdmin
-    rm -rf /tmp/wazuh-passwords.txt
+    rm -rf /tmp/cyb3rhq-passwords.txt
     @echo 1
 }
 
@@ -801,8 +801,8 @@ test-ASSERT-FAIL-42-installCommon_startService-no-service-manager() {
     @mockfalse ps -e
     @mockfalse grep -E -q "^\ *1\ .*systemd$"
     @mockfalse grep -E -q "^\ *1\ .*init$"
-    @rm /etc/init.d/wazuh
-    installCommon_startService wazuh-manager
+    @rm /etc/init.d/cyb3rhq
+    installCommon_startService cyb3rhq-manager
 }
 
 test-43-installCommon_startService-systemd() {
@@ -810,13 +810,13 @@ test-43-installCommon_startService-systemd() {
     @mockfalse ps -e === @out
     @mocktrue grep -E -q "^\ *1\ .*systemd$"
     @mockfalse grep -E -q "^\ *1\ .*init$"
-    installCommon_startService wazuh-manager
+    installCommon_startService cyb3rhq-manager
 }
 
 test-43-installCommon_startService-systemd-assert() {
     systemctl daemon-reload
-    systemctl enable wazuh-manager.service
-    systemctl start wazuh-manager.service
+    systemctl enable cyb3rhq-manager.service
+    systemctl start cyb3rhq-manager.service
 }
 
 test-44-installCommon_startService-systemd-error() {
@@ -824,13 +824,13 @@ test-44-installCommon_startService-systemd-error() {
     @mock ps -e === @out
     @mocktrue grep -E -q "^\ *1\ .*systemd$"
     @mockfalse grep -E -q "^\ *1\ .*init$"
-    @mockfalse systemctl start wazuh-manager.service
-    installCommon_startService wazuh-manager
+    @mockfalse systemctl start cyb3rhq-manager.service
+    installCommon_startService cyb3rhq-manager
 }
 
 test-44-installCommon_startService-systemd-error-assert() {
     systemctl daemon-reload
-    systemctl enable wazuh-manager.service
+    systemctl enable cyb3rhq-manager.service
     installCommon_rollBack
     exit 1
 }
@@ -841,19 +841,19 @@ test-45-installCommon_startService-initd() {
     @mockfalse grep -E -q "^\ *1\ .*systemd$"
     @mocktrue grep -E -q "^\ *1\ .*init$"
     @mkdir -p /etc/init.d
-    @touch /etc/init.d/wazuh-manager
-    @chmod +x /etc/init.d/wazuh-manager
-    installCommon_startService wazuh-manager
-    @rm /etc/init.d/wazuh-manager
+    @touch /etc/init.d/cyb3rhq-manager
+    @chmod +x /etc/init.d/cyb3rhq-manager
+    installCommon_startService cyb3rhq-manager
+    @rm /etc/init.d/cyb3rhq-manager
 }
 
 test-45-installCommon_startService-initd-assert() {
     @mkdir -p /etc/init.d
-    @touch /etc/init.d/wazuh-manager
-    chkconfig wazuh-manager on
-    service wazuh-manager start
-    /etc/init.d/wazuh-manager start
-    @rm /etc/init.d/wazuh-manager
+    @touch /etc/init.d/cyb3rhq-manager
+    chkconfig cyb3rhq-manager on
+    service cyb3rhq-manager start
+    /etc/init.d/cyb3rhq-manager start
+    @rm /etc/init.d/cyb3rhq-manager
 }
 
 test-46-installCommon_startService-initd-error() {
@@ -862,22 +862,22 @@ test-46-installCommon_startService-initd-error() {
     @mockfalse grep -E -q "^\ *1\ .*systemd$"
     @mocktrue grep -E -q "^\ *1\ .*init$"
     @mkdir -p /etc/init.d
-    @touch /etc/init.d/wazuh-manager
-    #/etc/init.d/wazuh-manager is not executable -> It will fail
-    installCommon_startService wazuh-manager
-    @rm /etc/init.d/wazuh-manager
+    @touch /etc/init.d/cyb3rhq-manager
+    #/etc/init.d/cyb3rhq-manager is not executable -> It will fail
+    installCommon_startService cyb3rhq-manager
+    @rm /etc/init.d/cyb3rhq-manager
 }
 
 test-46-installCommon_startService-initd-error-assert() {
     @mkdir -p /etc/init.d
-    @touch /etc/init.d/wazuh-manager
-    @chmod +x /etc/init.d/wazuh-manager
-    chkconfig wazuh-manager on
-    service wazuh-manager start
-    /etc/init.d/wazuh-manager start
+    @touch /etc/init.d/cyb3rhq-manager
+    @chmod +x /etc/init.d/cyb3rhq-manager
+    chkconfig cyb3rhq-manager on
+    service cyb3rhq-manager start
+    /etc/init.d/cyb3rhq-manager start
     installCommon_rollBack
     exit 1
-    @rm /etc/init.d/wazuh-manager
+    @rm /etc/init.d/cyb3rhq-manager
 }
 
 test-47-installCommon_startService-rc.d/init.d() {
@@ -887,19 +887,19 @@ test-47-installCommon_startService-rc.d/init.d() {
     @mockfalse grep -E -q "^\ *1\ .*init$"
 
     @mkdir -p /etc/rc.d/init.d
-    @touch /etc/rc.d/init.d/wazuh-manager
-    @chmod +x /etc/rc.d/init.d/wazuh-manager
+    @touch /etc/rc.d/init.d/cyb3rhq-manager
+    @chmod +x /etc/rc.d/init.d/cyb3rhq-manager
 
-    installCommon_startService wazuh-manager
-    @rm /etc/rc.d/init.d/wazuh-manager
+    installCommon_startService cyb3rhq-manager
+    @rm /etc/rc.d/init.d/cyb3rhq-manager
 }
 
 test-47-installCommon_startService-rc.d/init.d-assert() {
     @mkdir -p /etc/rc.d/init.d
-    @touch /etc/rc.d/init.d/wazuh-manager
-    @chmod +x /etc/rc.d/init.d/wazuh-manager
-    /etc/rc.d/init.d/wazuh-manager start
-    @rm /etc/rc.d/init.d/wazuh-manager
+    @touch /etc/rc.d/init.d/cyb3rhq-manager
+    @chmod +x /etc/rc.d/init.d/cyb3rhq-manager
+    /etc/rc.d/init.d/cyb3rhq-manager start
+    @rm /etc/rc.d/init.d/cyb3rhq-manager
 }
 
 function load-installCommon_readPasswordFileUsers() {
@@ -917,12 +917,12 @@ test-49-installCommon_readPasswordFileUsers-changeall-correct() {
     load-installCommon_readPasswordFileUsers
     p_file=/tmp/passfile.yml
     @mock grep -Pzc '\A(User:\s*name:\s*\w+\s*password:\s*[A-Za-z0-9_\-]+\s*)+\Z' /tmp/passfile.yml === @echo 1
-    @mock grep name: /tmp/passfile.yml === @echo wazuh kibanaserver
+    @mock grep name: /tmp/passfile.yml === @echo cyb3rhq kibanaserver
     @mock awk '{ print substr( $2, 1, length($2) ) }'
-    @mock grep password: /tmp/passfile.yml === @echo wazuhpassword kibanaserverpassword
+    @mock grep password: /tmp/passfile.yml === @echo cyb3rhqpassword kibanaserverpassword
     @mock awk '{ print substr( $2, 1, length($2) ) }'
     changeall=1
-    users=( wazuh kibanaserver )
+    users=( cyb3rhq kibanaserver )
     installCommon_readPasswordFileUsers
     @echo ${fileusers[*]}
     @echo ${filepasswords[*]}
@@ -931,22 +931,22 @@ test-49-installCommon_readPasswordFileUsers-changeall-correct() {
 }
 
 test-49-installCommon_readPasswordFileUsers-changeall-correct-assert() {
-    @echo wazuh kibanaserver
-    @echo wazuhpassword kibanaserverpassword
-    @echo wazuh kibanaserver
-    @echo wazuhpassword kibanaserverpassword
+    @echo cyb3rhq kibanaserver
+    @echo cyb3rhqpassword kibanaserverpassword
+    @echo cyb3rhq kibanaserver
+    @echo cyb3rhqpassword kibanaserverpassword
 }
 
 test-50-installCommon_readPasswordFileUsers-changeall-user-doesnt-exist() {
     load-installCommon_readPasswordFileUsers
     p_file=/tmp/passfile.yml
     @mock grep -Pzc '\A(User:\s*name:\s*\w+\s*password:\s*[A-Za-z0-9_\-]+\s*)+\Z' /tmp/passfile.yml === @echo 1
-    @mock grep name: /tmp/passfile.yml === @out wazuh kibanaserver admin
+    @mock grep name: /tmp/passfile.yml === @out cyb3rhq kibanaserver admin
     @mock awk '{ print substr( $2, 1, length($2) ) }'
-    @mock grep password: /tmp/passfile.yml === @out wazuhpassword kibanaserverpassword
+    @mock grep password: /tmp/passfile.yml === @out cyb3rhqpassword kibanaserverpassword
     @mock awk '{ print substr( $2, 1, length($2) ) }'
     changeall=1
-    users=( wazuh kibanaserver )
+    users=( cyb3rhq kibanaserver )
     installCommon_readPasswordFileUsers
     @echo ${fileusers[*]}
     @echo ${filepasswords[*]}
@@ -955,19 +955,19 @@ test-50-installCommon_readPasswordFileUsers-changeall-user-doesnt-exist() {
 }
 
 test-50-installCommon_readPasswordFileUsers-changeall-user-doesnt-exist-assert() {
-    @echo wazuh kibanaserver admin
-    @echo wazuhpassword kibanaserverpassword
-    @echo wazuh kibanaserver
-    @echo wazuhpassword kibanaserverpassword
+    @echo cyb3rhq kibanaserver admin
+    @echo cyb3rhqpassword kibanaserverpassword
+    @echo cyb3rhq kibanaserver
+    @echo cyb3rhqpassword kibanaserverpassword
 }
 
 test-51-installCommon_readPasswordFileUsers-no-changeall-kibana-correct() {
     load-installCommon_readPasswordFileUsers
     p_file=/tmp/passfile.yml
     @mock grep -Pzc '\A(User:\s*name:\s*\w+\s*password:\s*[A-Za-z0-9_\-]+\s*)+\Z' /tmp/passfile.yml === @echo 1
-    @mock grep name: /tmp/passfile.yml === @out wazuh kibanaserver admin
+    @mock grep name: /tmp/passfile.yml === @out cyb3rhq kibanaserver admin
     @mock awk '{ print substr( $2, 1, length($2) ) }'
-    @mock grep password: /tmp/passfile.yml === @out wazuhpassword kibanaserverpassword adminpassword
+    @mock grep password: /tmp/passfile.yml === @out cyb3rhqpassword kibanaserverpassword adminpassword
     @mock awk '{ print substr( $2, 1, length($2) ) }'
     changeall=
     dashboard_installed=1
@@ -980,8 +980,8 @@ test-51-installCommon_readPasswordFileUsers-no-changeall-kibana-correct() {
 }
 
 test-51-installCommon_readPasswordFileUsers-no-changeall-kibana-correct-assert() {
-    @echo wazuh kibanaserver admin
-    @echo wazuhpassword kibanaserverpassword adminpassword
+    @echo cyb3rhq kibanaserver admin
+    @echo cyb3rhqpassword kibanaserverpassword adminpassword
     @echo kibanaserver admin
     @echo kibanaserverpassword adminpassword
 }
@@ -990,13 +990,13 @@ test-52-installCommon_readPasswordFileUsers-no-changeall-filebeat-correct() {
     load-installCommon_readPasswordFileUsers
     p_file=/tmp/passfile.yml
     @mock grep -Pzc '\A(User:\s*name:\s*\w+\s*password:\s*[A-Za-z0-9_\-]+\s*)+\Z' /tmp/passfile.yml === @echo 1
-    @mock grep name: /tmp/passfile.yml === @out wazuh kibanaserver admin
+    @mock grep name: /tmp/passfile.yml === @out cyb3rhq kibanaserver admin
     @mock awk '{ print substr( $2, 1, length($2) ) }'
-    @mock grep password: /tmp/passfile.yml === @out wazuhpassword kibanaserverpassword adminpassword
+    @mock grep password: /tmp/passfile.yml === @out cyb3rhqpassword kibanaserverpassword adminpassword
     @mock awk '{ print substr( $2, 1, length($2) ) }'
     changeall=
     filebeat_installed=1
-    wazuh=1
+    cyb3rhq=1
     installCommon_readPasswordFileUsers
     @echo ${fileusers[*]}
     @echo ${filepasswords[*]}
@@ -1005,8 +1005,8 @@ test-52-installCommon_readPasswordFileUsers-no-changeall-filebeat-correct() {
 }
 
 test-52-installCommon_readPasswordFileUsers-no-changeall-filebeat-correct-assert() {
-    @echo wazuh kibanaserver admin
-    @echo wazuhpassword kibanaserverpassword adminpassword
+    @echo cyb3rhq kibanaserver admin
+    @echo cyb3rhqpassword kibanaserverpassword adminpassword
     @echo admin
     @echo adminpassword
 }

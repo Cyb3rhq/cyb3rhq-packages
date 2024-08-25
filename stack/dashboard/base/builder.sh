@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Wazuh dashboard base builder
-# Copyright (C) 2021, Wazuh Inc.
+# Cyb3rhq dashboard base builder
+# Copyright (C) 2021, Cyb3rhq Inc.
 #
 # This program is a free software; you can redistribute it
 # and/or modify it under the terms of the GNU General Public
@@ -17,7 +17,7 @@ future="$3"
 repository="$4"
 reference="$5"
 opensearch_version="2.10.0"
-base_dir=/opt/wazuh-dashboard-base
+base_dir=/opt/cyb3rhq-dashboard-base
 
 # -----------------------------------------------------------------------------
 # Set environment
@@ -33,31 +33,31 @@ fi
 
 # Including files
 if [ "${reference}" ];then
-    curl -sL https://github.com/wazuh/wazuh-packages/tarball/"${reference}" | tar xz
-    cp -r ./wazuh*/* /root/
-    version=$(curl -sL https://raw.githubusercontent.com/wazuh/wazuh-packages/${reference}/VERSION | cat)
+    curl -sL https://github.com/cyb3rhq/cyb3rhq-packages/tarball/"${reference}" | tar xz
+    cp -r ./cyb3rhq*/* /root/
+    version=$(curl -sL https://raw.githubusercontent.com/cyb3rhq/cyb3rhq-packages/${reference}/VERSION | cat)
 else
     version=$(cat /root/VERSION)
 fi
 if [ "${future}" = "yes" ];then
     version="99.99.0"
 fi
-wazuh_minor=$(echo ${version} | cut -c1-3)
+cyb3rhq_minor=$(echo ${version} | cut -c1-3)
 
-# Obtain the Wazuh plugin URL
+# Obtain the Cyb3rhq plugin URL
 if [ "${repository}" ];then
     valid_url='(https?|ftp|file)://[-[:alnum:]\+&@#/%?=~_|!:,.;]*[-[:alnum:]\+&@#/%=~_|]'
     if [[ $repository =~ $valid_url ]];then
         url="${repository}"
         if ! curl --output /dev/null --silent --head --fail "${url}"; then
-            echo "The given URL to download the Wazuh plugin zip does not exist: ${url}"
+            echo "The given URL to download the Cyb3rhq plugin zip does not exist: ${url}"
             exit 1
         fi
     else
-        url="https://packages-dev.wazuh.com/${repository}/ui/dashboard/wazuh-${version}-${revision}.zip"
+        url="https://packages-dev.wazuh.com/${repository}/ui/dashboard/cyb3rhq-${version}-${revision}.zip"
     fi
 else
-    url="https://packages-dev.wazuh.com/pre-release/ui/dashboard/wazuh-${version}-${revision}.zip"
+    url="https://packages-dev.wazuh.com/pre-release/ui/dashboard/cyb3rhq-${version}-${revision}.zip"
 fi
 
 # Set directories
@@ -107,7 +107,7 @@ cp ./etc/template.js ./src/core/server/rendering/views/template.js
 cp ./etc/styles.js ./src/core/server/rendering/views/styles.js
 
 # -----------------------------------------------------------------------------
-# Customize OpenSearch Dashboards with Wazuh
+# Customize OpenSearch Dashboards with Cyb3rhq
 # -----------------------------------------------------------------------------
 
 # Set v7 theme as default
@@ -116,7 +116,7 @@ sed -i "s|defaultValue: 'v8'|defaultValue: 'v7'|g" ./src/core/server/ui_settings
 
 
 # Replace App Title
-sed -i "s|defaultValue: ''|defaultValue: \'Wazuh\'|g" ./src/core/server/opensearch_dashboards_config.js
+sed -i "s|defaultValue: ''|defaultValue: \'Cyb3rhq\'|g" ./src/core/server/opensearch_dashboards_config.js
 sed -i "90s|defaultValue: true|defaultValue: false|g" ./src/core/server/opensearch_dashboards_config.js
 
 # Remove the `home` button from the sidebar menu
@@ -146,10 +146,10 @@ sed -i 's|opensearchDashboardsDocLink,surveyLink:surveyLink}|opensearchDashboard
 
 ### Opensearch Dashboards documentation
 sed -i 's|OpenSearch Dashboards documentation|Documentation|' ./src/core/target/public/core.entry.js
-sed -i 's|href:opensearchDashboardsDocLink,|href:"https://documentation.wazuh.com/'${wazuh_minor}'", iconType:darkmode?"/ui/logos/icon_dark.svg":"/ui/logos/icon_light.svg",|' ./src/core/target/public/core.entry.js
+sed -i 's|href:opensearchDashboardsDocLink,|href:"https://documentation.wazuh.com/'${cyb3rhq_minor}'", iconType:darkmode?"/ui/logos/icon_dark.svg":"/ui/logos/icon_light.svg",|' ./src/core/target/public/core.entry.js
 
 ## Help link - Ask OpenSearch
-sed -i 's|Ask OpenSearch|Ask Wazuh|' ./src/core/target/public/core.entry.js
+sed -i 's|Ask OpenSearch|Ask Cyb3rhq|' ./src/core/target/public/core.entry.js
 sed -i 's|OPENSEARCH_DASHBOARDS_ASK_OPENSEARCH_LINK="https://github.com/opensearch-project"|=="https://wazuh.com/community/join-us-on-slack"|' ./src/core/target/public/core.entry.js
 
 ## Help link - Community
@@ -162,18 +162,18 @@ sed -i 's|Community|Slack channel|' ./src/core/target/public/core.entry.js
 sed -i 's|href:helpSupportUrl,|href:"https://wazuh.com/community/join-us-on-slack", iconType:"logoSlack",|' ./src/core/target/public/core.entry.js
 
 ## Help link - Give feedback
-sed -i 's|https://survey.opensearch.org|https://github.com/wazuh/|' src/core/server/opensearch_dashboards_config.js
+sed -i 's|https://survey.opensearch.org|https://github.com/cyb3rhq/|' src/core/server/opensearch_dashboards_config.js
 sed -i 's|"Give feedback"|"Projects on Github"|' ./src/core/target/public/core.entry.js
 sed -i 's|href:surveyLink,|href:surveyLink, iconType:"logoGithub",|' ./src/core/target/public/core.entry.js
 
 ## Help link - Open an issue in GitHub
-sed -i 's|GITHUB_CREATE_ISSUE_LINK="https://github.com/opensearch-project/OpenSearch-Dashboards/issues/new/choose"|GITHUB_CREATE_ISSUE_LINK="https://github.com/wazuh/wazuh/issues/new/choose"|' ./src/core/target/public/core.entry.js
+sed -i 's|GITHUB_CREATE_ISSUE_LINK="https://github.com/opensearch-project/OpenSearch-Dashboards/issues/new/choose"|GITHUB_CREATE_ISSUE_LINK="https://github.com/cyb3rhq/cyb3rhq/issues/new/choose"|' ./src/core/target/public/core.entry.js
 sed -i 's|"Open an issue in GitHub"|"Google group"|' ./src/core/target/public/core.entry.js
-sed -i 's|href:GITHUB_CREATE_ISSUE_LINK,target:"_blank",size:"xs",iconType:"logoGithub"|href:"https://groups.google.com/forum/#!forum/wazuh/",target:"_blank",size:"xs",iconType:"/ui/logos/google_groups.svg"|' ./src/core/target/public/core.entry.js
+sed -i 's|href:GITHUB_CREATE_ISSUE_LINK,target:"_blank",size:"xs",iconType:"logoGithub"|href:"https://groups.google.com/forum/#!forum/cyb3rhq/",target:"_blank",size:"xs",iconType:"/ui/logos/google_groups.svg"|' ./src/core/target/public/core.entry.js
 
 # Custom logos
 ## Custom logos - Login logo
-sed -i 's|props.chrome.logos.OpenSearch.url|props.http.basePath.prepend("/ui/logos/wazuh_dashboard_login_mark.svg")|g' ./plugins/securityDashboards/target/public/securityDashboards.chunk.5.js
+sed -i 's|props.chrome.logos.OpenSearch.url|props.http.basePath.prepend("/ui/logos/cyb3rhq_dashboard_login_mark.svg")|g' ./plugins/securityDashboards/target/public/securityDashboards.chunk.5.js
 
 # Collapse initially the application categories in the side menu
 sed -i 's|_storage\$getItem!==void 0?_storage\$getItem:"true"|_storage\$getItem!==void 0?_storage\$getItem:"false"|' ./src/core/target/public/core.entry.js
@@ -283,20 +283,20 @@ do
 done
 
 # -----------------------------------------------------------------------------
-# Wazuh customizations
+# Cyb3rhq customizations
 # -----------------------------------------------------------------------------
 
 # Add VERSION file
 cp /root/VERSION .
 
-# Add an exception for wazuh plugin install
-wazuh_plugin="if (plugin.includes(\'wazuh\')) {\n    return plugin;\n  } else {\n    return \`\${LATEST_PLUGIN_BASE_URL}\/\${version}\/latest\/\${platform}\/\${arch}\/tar\/builds\/opensearch-dashboards\/plugins\/\${plugin}-\${version}.zip\`;\n  }"
-sed -i "s|return \`\${LATEST_PLUGIN_BASE_URL}\/\${version}\/latest\/\${platform}\/\${arch}\/tar\/builds\/opensearch-dashboards\/plugins\/\${plugin}-\${version}.zip\`;|$wazuh_plugin|" ./src/cli_plugin/install/settings.js
+# Add an exception for cyb3rhq plugin install
+cyb3rhq_plugin="if (plugin.includes(\'cyb3rhq\')) {\n    return plugin;\n  } else {\n    return \`\${LATEST_PLUGIN_BASE_URL}\/\${version}\/latest\/\${platform}\/\${arch}\/tar\/builds\/opensearch-dashboards\/plugins\/\${plugin}-\${version}.zip\`;\n  }"
+sed -i "s|return \`\${LATEST_PLUGIN_BASE_URL}\/\${version}\/latest\/\${platform}\/\${arch}\/tar\/builds\/opensearch-dashboards\/plugins\/\${plugin}-\${version}.zip\`;|$cyb3rhq_plugin|" ./src/cli_plugin/install/settings.js
 
 # Generate build number for package.json
 curl -sO ${url}
-unzip *.zip 'opensearch-dashboards/wazuh/package.json'
-build_number=$(jq -r '.version' ./opensearch-dashboards/wazuh/package.json | tr -d '.')$(jq -r '.revision' ./opensearch-dashboards/wazuh/package.json)
+unzip *.zip 'opensearch-dashboards/cyb3rhq/package.json'
+build_number=$(jq -r '.version' ./opensearch-dashboards/cyb3rhq/package.json | tr -d '.')$(jq -r '.revision' ./opensearch-dashboards/cyb3rhq/package.json)
 rm -rf ./opensearch-dashboards
 rm -f ./*.zip
 jq ".build.number=${build_number}" ./package.json > ./package.json.tmp
@@ -329,5 +329,5 @@ find -type f -perm 744 -exec chmod 740 {} \;
 
 # Base output
 cd /opt
-tar -cJf wazuh-dashboard-base-"${version}"-"${revision}"-linux-${architecture}.tar.xz wazuh-dashboard-base
-cp wazuh-dashboard-base-"${version}"-"${revision}"-linux-${architecture}.tar.xz /tmp/output/
+tar -cJf cyb3rhq-dashboard-base-"${version}"-"${revision}"-linux-${architecture}.tar.xz cyb3rhq-dashboard-base
+cp cyb3rhq-dashboard-base-"${version}"-"${revision}"-linux-${architecture}.tar.xz /tmp/output/

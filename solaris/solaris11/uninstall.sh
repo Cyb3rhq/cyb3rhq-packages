@@ -1,6 +1,6 @@
 #!/bin/sh
-# uninstall script for wazuh-agent
-# Wazuh, Inc 2015
+# uninstall script for cyb3rhq-agent
+# Cyb3rhq, Inc 2015
 
 install_path=$1
 control_binary=$2
@@ -10,10 +10,10 @@ ${install_path}/bin/${control_binary} stop
 rm -r /var/ossec*
 
 # remove launchdaemons
-rm -f /etc/init.d/wazuh-agent
+rm -f /etc/init.d/cyb3rhq-agent
 
 ## Remove User and Groups
-userdel wazuh
-groupdel wazuh
+userdel cyb3rhq
+groupdel cyb3rhq
 
 exit 0

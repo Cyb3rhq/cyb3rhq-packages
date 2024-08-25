@@ -1,5 +1,5 @@
 nodes:
-  # Wazuh indexer nodes
+  # Cyb3rhq indexer nodes
   indexer:
     - name: indexer-1
       ip: "<indexer-node-ip>"

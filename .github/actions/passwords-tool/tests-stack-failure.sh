@@ -1,15 +1,15 @@
 #!/bin/bash
 
-apiPass="$(cat wazuh-install-files/wazuh-passwords.txt | awk "/username: 'wazuh'/{getline;print;}" | awk '{ print $2 }' | tr -d \' )"
-adminPass="$(cat wazuh-install-files/wazuh-passwords.txt | awk "/username: 'admin'/{getline;print;}" | awk '{ print $2 }' | tr -d \')"
+apiPass="$(cat cyb3rhq-install-files/cyb3rhq-passwords.txt | awk "/username: 'cyb3rhq'/{getline;print;}" | awk '{ print $2 }' | tr -d \' )"
+adminPass="$(cat cyb3rhq-install-files/cyb3rhq-passwords.txt | awk "/username: 'admin'/{getline;print;}" | awk '{ print $2 }' | tr -d \')"
 
-if ! bash wazuh-passwords-tool.sh -u wazuuuh | grep "ERROR"; then
+if ! bash cyb3rhq-passwords-tool.sh -u wazuuuh | grep "ERROR"; then
    exit 1
-elif ! sudo bash wazuh-passwords-tool.sh -u admin -p password | grep "ERROR"; then
+elif ! sudo bash cyb3rhq-passwords-tool.sh -u admin -p password | grep "ERROR"; then
    exit 1 
-elif ! sudo bash wazuh-passwords-tool.sh -au wazuh -ap "${adminPass}" -u wazuh -p password -A | grep "ERROR"; then
+elif ! sudo bash cyb3rhq-passwords-tool.sh -au cyb3rhq -ap "${adminPass}" -u cyb3rhq -p password -A | grep "ERROR"; then
    exit 1
-elif ! curl -s -u wazuh:wazuh -k -X POST "https://localhost:55000/security/user/authenticate" | grep "Invalid credentials"; then
+elif ! curl -s -u cyb3rhq:cyb3rhq -k -X POST "https://localhost:55000/security/user/authenticate" | grep "Invalid credentials"; then
    exit 1
 elif ! curl -s -u wazuuh:"${apiPass}" -k -X POST "https://localhost:55000/security/user/authenticate" | grep "Invalid credentials"; then
    exit 1

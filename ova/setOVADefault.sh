@@ -7,8 +7,8 @@ workspace=$1
 path_ova=$2
 dest_ova=$3
 ovf_path=$4
-wazuh_version=$5
-file="wazuh-${wazuh_version}"
+cyb3rhq_version=$5
+file="cyb3rhq-${cyb3rhq_version}"
 mkdir -p ${workspace}/new-ova/
 
 echo "Setting OVA to default"
@@ -23,7 +23,7 @@ echo "Files renamed"
 
 cp ${ovf_path} ${workspace}/new-ova/${file}.ovf
 
-sed -i "s/{WAZUH_VERSION}/${wazuh_version}/" ${workspace}/new-ova/${file}.ovf
+sed -i "s/{CYB3RHQ_VERSION}/${cyb3rhq_version}/" ${workspace}/new-ova/${file}.ovf
 echo "OVF Version changed"
 
 ovf_size=$(stat --printf=%s ${workspace}/new-ova/${file}-disk-1.vmdk)

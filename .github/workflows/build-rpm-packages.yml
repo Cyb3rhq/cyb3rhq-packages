@@ -1,4 +1,4 @@
-name: Build Wazuh Packages - RPM - x86_64 and i386
+name: Build Cyb3rhq Packages - RPM - x86_64 and i386
 on:
   pull_request:
     paths:
@@ -9,7 +9,7 @@ on:
 
 
 jobs:
-  Wazuh-agent-rpm-package-build:
+  Cyb3rhq-agent-rpm-package-build:
     env:
       BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
     runs-on: ubuntu-latest
@@ -66,11 +66,11 @@ jobs:
         run: |
           bash $GITHUB_WORKSPACE/.github/actions/ghcr-pull-and-push/pull_image_from_ghcr.sh ${{ secrets.GITHUB_TOKEN }} ${{ github.actor}} $CONTAINER_NAME ${{ env.TAG }}
 
-      - name: Build the ${{ matrix.ARCHITECTURE }} rpm Wazuh ${{ matrix.TYPE }} package
+      - name: Build the ${{ matrix.ARCHITECTURE }} rpm Cyb3rhq ${{ matrix.TYPE }} package
         if : steps.changes.outputs.rpm_packages == 'true' || (steps.changes.outputs.rpm_images_agent_i386 == 'true' && matrix.ARCHITECTURE == 'i386') || ((steps.changes.outputs.rpm_images_manager_x86_64 == 'true' || steps.changes.outputs.rpm_images_agent_x86_64 == 'true') && matrix.ARCHITECTURE == 'x86_64')
         working-directory: ./rpms
         run: |
-          if [ "X`git ls-remote --heads https://github.com/wazuh/wazuh.git ${BRANCH_NAME}`" != "X" ]; then
+          if [ "X`git ls-remote --heads https://github.com/cyb3rhq/cyb3rhq.git ${BRANCH_NAME}`" != "X" ]; then
               W_BRANCH=${BRANCH_NAME}
           else
               W_BRANCH=${{ env.VERSION }}
@@ -79,7 +79,7 @@ jobs:
           bash generate_rpm_package.sh -b ${W_BRANCH} -t ${{ matrix.TYPE }} -a ${{ matrix.ARCHITECTURE }} --dev -j 2 --dont-build-docker --tag ${{ env.TAG }} -r $REVISION
           echo "PACKAGE_NAME=$(ls ./output | grep .rpm | head -n 1)" >> $GITHUB_ENV
 
-      - name: Upload Wazuh ${{ matrix.TYPE }} ${{ matrix.ARCHITECTURE }} package as artifact
+      - name: Upload Cyb3rhq ${{ matrix.TYPE }} ${{ matrix.ARCHITECTURE }} package as artifact
         if : steps.changes.outputs.rpm_packages == 'true' || (steps.changes.outputs.rpm_images_agent_i386 == 'true' && matrix.ARCHITECTURE == 'i386') || ((steps.changes.outputs.rpm_images_manager_x86_64 == 'true' || steps.changes.outputs.rpm_images_agent_x86_64 == 'true') && matrix.ARCHITECTURE == 'x86_64')
         uses: actions/upload-artifact@v2
         with:

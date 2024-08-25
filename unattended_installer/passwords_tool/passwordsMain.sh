@@ -1,5 +1,5 @@
 # Passwords tool - main functions
-# Copyright (C) 2015, Wazuh Inc.
+# Copyright (C) 2015, Cyb3rhq Inc.
 #
 # This program is a free software; you can redistribute it
 # and/or modify it under the terms of the GNU General Public
@@ -10,26 +10,26 @@ function getHelp() {
 
     echo -e ""
     echo -e "NAME"
-    echo -e "        $(basename "${0}") - Manage passwords for Wazuh indexer users."
+    echo -e "        $(basename "${0}") - Manage passwords for Cyb3rhq indexer users."
     echo -e ""
     echo -e "SYNOPSIS"
     echo -e "        $(basename "${0}") [OPTIONS]"
     echo -e ""
     echo -e "DESCRIPTION"
     echo -e "        -a,  --change-all"
-    echo -e "                Changes all the Wazuh indexer and Wazuh API user passwords and prints them on screen."
+    echo -e "                Changes all the Cyb3rhq indexer and Cyb3rhq API user passwords and prints them on screen."
     echo -e "                To change API passwords -au|--admin-user and -ap|--admin-password are required."
     echo -e ""
     echo -e "        -A,  --api"
-    echo -e "                Change the Wazuh API password."
+    echo -e "                Change the Cyb3rhq API password."
     echo -e "                Requires -u|--user, and -p|--password, -au|--admin-user and -ap|--admin-password."
     echo -e ""
     echo -e "        -au,  --admin-user <adminUser>"
-    echo -e "                Admin user for Wazuh API, Required to change Wazuh API passwords."
+    echo -e "                Admin user for Cyb3rhq API, Required to change Cyb3rhq API passwords."
     echo -e "                Requires -A|--api."
     echo -e ""
     echo -e "        -ap,  --admin-password <adminPassword>"
-    echo -e "                Password for Wazuh API admin user, Required to change Wazuh API passwords."
+    echo -e "                Password for Cyb3rhq API admin user, Required to change Cyb3rhq API passwords."
     echo -e "                Requires -A|--api."
     echo -e ""
     echo -e "        -u,  --user <user>"
@@ -48,22 +48,22 @@ function getHelp() {
     echo -e "        -v,  --verbose"
     echo -e "                Shows the complete script execution output."
     echo -e ""
-    echo -e "        -f,  --file <wazuh-passwords.txt>"
+    echo -e "        -f,  --file <cyb3rhq-passwords.txt>"
     echo -e "                Changes the passwords for the ones given in the file."
     echo -e ""
-    echo -e "                Wazuh indexer users must have this format:"
+    echo -e "                Cyb3rhq indexer users must have this format:"
     echo -e ""
     echo -e "                    # Description"
     echo -e "                      indexer_username: <user>"
     echo -e "                      indexer_password: <password>"
     echo -e ""
-    echo -e "                Wazuh API users must have this format:"
+    echo -e "                Cyb3rhq API users must have this format:"
     echo -e ""
     echo -e "                    # Description"
     echo -e "                      api_username: <user>"
     echo -e "                      api_password: <password>"
     echo -e ""
-    echo -e "        -gf, --generate-file <wazuh-passwords.txt>"
+    echo -e "        -gf, --generate-file <cyb3rhq-passwords.txt>"
     echo -e "                Generate password file with random passwords for standard users."
     echo -e ""
     echo -e "        -h,  --help"
@@ -175,7 +175,7 @@ function main() {
             esac
         done
 
-        export JAVA_HOME=/usr/share/wazuh-indexer/jdk/
+        export JAVA_HOME=/usr/share/cyb3rhq-indexer/jdk/
 
         if [ -n "${verboseenabled}" ]; then
             debug="2>&1 | tee -a ${logfile}"
@@ -228,9 +228,9 @@ function main() {
                 passwords_getApiToken
                 passwords_getApiUsers
                 passwords_getApiIds
-            elif [ -z "${wazuh_installed}" ] && [ -n "${dashboard_installed}" ]; then
+            elif [ -z "${cyb3rhq_installed}" ] && [ -n "${dashboard_installed}" ]; then
                 passwords_readDashboardUsers
-            elif [ -n "${indexer_installed}" ] || [ -n "${wazuh_installed}" ]; then
+            elif [ -n "${indexer_installed}" ] || [ -n "${cyb3rhq_installed}" ]; then
                 passwords_readUsers
             fi
             passwords_checkUser
@@ -247,17 +247,17 @@ function main() {
         
 
         if [ -n "${changeall}" ] || [ -n "${p_file}" ]; then
-            if [ -n "${indexer_installed}" ] || [ -n "${wazuh_installed}" ]; then
+            if [ -n "${indexer_installed}" ] || [ -n "${cyb3rhq_installed}" ]; then
                 passwords_readUsers
             fi
 
-            if [ -n "${wazuh_installed}" ]; then
+            if [ -n "${cyb3rhq_installed}" ]; then
                 if [ -n "${adminUser}" ] && [ -n "${adminPassword}" ]; then
                     passwords_getApiToken
                     passwords_getApiUsers
                     passwords_getApiIds
                 else
-                    common_logger "Wazuh API admin credentials not provided, Wazuh API passwords not changed."
+                    common_logger "Cyb3rhq API admin credentials not provided, Cyb3rhq API passwords not changed."
                 fi
             elif  [ -n "${dashboard_installed}" ]; then
                 passwords_readDashboardUsers
@@ -280,12 +280,12 @@ function main() {
         fi
 
         # Call the function to change the password for filebeat and/or kibanaserver
-        if [ -z "${indexer_installed}" ] && { [ -n "${wazuh_installed}" ] || [ -n "${dashboard_installed}" ]; }; then
+        if [ -z "${indexer_installed}" ] && { [ -n "${cyb3rhq_installed}" ] || [ -n "${dashboard_installed}" ]; }; then
             passwords_changePassword
         fi
 
         if [ -n "${api}" ] || [ -n "${changeall}" ]; then
-            if { [ -n "${adminUser}" ] && [ -n "${adminPassword}" ]; } || { [ -z "${wazuh_installed}" ] && [ -n "${dashboard_installed}" ]; }; then
+            if { [ -n "${adminUser}" ] && [ -n "${adminPassword}" ]; } || { [ -z "${cyb3rhq_installed}" ] && [ -n "${dashboard_installed}" ]; }; then
                 passwords_changePasswordApi
 
             fi

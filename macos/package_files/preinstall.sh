@@ -1,6 +1,6 @@
 #! /bin/bash
 # By Spransy, Derek" <DSPRANS () emory ! edu> and Charlie Scott
-# Modified by Wazuh, Inc. <info@wazuh.com>.
+# Modified by Cyb3rhq, Inc. <info@wazuh.com>.
 # This program is a free software; you can redistribute it and/or modify it under the terms of GPLv2
 
 #####
@@ -12,26 +12,26 @@
 DIR="/Library/Ossec"
 
 if [ -d "${DIR}" ]; then
-    if [ -f "${DIR}/WAZUH_PKG_UPGRADE" ]; then
-        rm -f "${DIR}/WAZUH_PKG_UPGRADE"
+    if [ -f "${DIR}/CYB3RHQ_PKG_UPGRADE" ]; then
+        rm -f "${DIR}/CYB3RHQ_PKG_UPGRADE"
     fi
-    if [ -f "${DIR}/WAZUH_RESTART" ]; then
-        rm -f "${DIR}/WAZUH_RESTART"
+    if [ -f "${DIR}/CYB3RHQ_RESTART" ]; then
+        rm -f "${DIR}/CYB3RHQ_RESTART"
     fi
-    touch "${DIR}/WAZUH_PKG_UPGRADE"
+    touch "${DIR}/CYB3RHQ_PKG_UPGRADE"
     upgrade="true"
-    if ${DIR}/bin/wazuh-control status | grep "is running" > /dev/null 2>&1; then
-        touch "${DIR}/WAZUH_RESTART"
+    if ${DIR}/bin/cyb3rhq-control status | grep "is running" > /dev/null 2>&1; then
+        touch "${DIR}/CYB3RHQ_RESTART"
         restart="true"
     elif ${DIR}/bin/ossec-control status | grep "is running" > /dev/null 2>&1; then
-        touch "${DIR}/WAZUH_RESTART"
+        touch "${DIR}/CYB3RHQ_RESTART"
         restart="true"
     fi
 fi
 
 # Stops the agent before upgrading it
-if [ -f ${DIR}/bin/wazuh-control ]; then
-    ${DIR}/bin/wazuh-control stop
+if [ -f ${DIR}/bin/cyb3rhq-control ]; then
+    ${DIR}/bin/cyb3rhq-control stop
 elif [ -f ${DIR}/bin/ossec-control ]; then
     ${DIR}/bin/ossec-control stop
 fi
@@ -41,7 +41,7 @@ if [ -n "${upgrade}" ]; then
     cp -r ${DIR}/etc/{ossec.conf,client.keys,local_internal_options.conf,shared} ${DIR}/config_files/
 
     if [ -d ${DIR}/logs/ossec ]; then
-        mv ${DIR}/logs/ossec ${DIR}/logs/wazuh
+        mv ${DIR}/logs/ossec ${DIR}/logs/cyb3rhq
     fi
     
     if [ -d ${DIR}/queue/ossec ]; then
@@ -50,8 +50,8 @@ if [ -n "${upgrade}" ]; then
 fi
 
 if [ -n "${upgrade}" ]; then
-    if pkgutil --pkgs | grep -i wazuh-agent-etc > /dev/null 2>&1 ; then
-        pkgutil --forget com.wazuh.pkg.wazuh-agent-etc
+    if pkgutil --pkgs | grep -i cyb3rhq-agent-etc > /dev/null 2>&1 ; then
+        pkgutil --forget com.cyb3rhq.pkg.cyb3rhq-agent-etc
     fi
 fi
 
@@ -86,7 +86,7 @@ while [[ $idvar -eq 0 ]]; do
    fi
 done
 
-echo "UID available for wazuh user is:";
+echo "UID available for cyb3rhq user is:";
 echo ${new_uid}
 
 # Verify that the uid and gid exist and match
@@ -102,42 +102,42 @@ if [[ ${new_uid} != ${new_gid} ]]
 fi
 
 # Stops the agent before upgrading it
-if [ -f ${DIR}/bin/wazuh-control ]; then
-    ${DIR}/bin/wazuh-control stop
+if [ -f ${DIR}/bin/cyb3rhq-control ]; then
+    ${DIR}/bin/cyb3rhq-control stop
 elif [ -f ${DIR}/bin/ossec-control ]; then
     ${DIR}/bin/ossec-control stop
 fi
 
 # Creating the group
-if [[ $(dscl . -read /Groups/wazuh) ]]
+if [[ $(dscl . -read /Groups/cyb3rhq) ]]
     then
-    echo "wazuh group already exists.";
+    echo "cyb3rhq group already exists.";
 else
-    sudo ${DSCL} localhost -create /Local/Default/Groups/wazuh
-    check_errm "Error creating group wazuh" "67"
-    sudo ${DSCL} localhost -createprop /Local/Default/Groups/wazuh PrimaryGroupID ${new_gid}
-    sudo ${DSCL} localhost -createprop /Local/Default/Groups/wazuh RealName wazuh
-    sudo ${DSCL} localhost -createprop /Local/Default/Groups/wazuh RecordName wazuh
-    sudo ${DSCL} localhost -createprop /Local/Default/Groups/wazuh RecordType: dsRecTypeStandard:Groups
-    sudo ${DSCL} localhost -createprop /Local/Default/Groups/wazuh Password "*"
+    sudo ${DSCL} localhost -create /Local/Default/Groups/cyb3rhq
+    check_errm "Error creating group cyb3rhq" "67"
+    sudo ${DSCL} localhost -createprop /Local/Default/Groups/cyb3rhq PrimaryGroupID ${new_gid}
+    sudo ${DSCL} localhost -createprop /Local/Default/Groups/cyb3rhq RealName cyb3rhq
+    sudo ${DSCL} localhost -createprop /Local/Default/Groups/cyb3rhq RecordName cyb3rhq
+    sudo ${DSCL} localhost -createprop /Local/Default/Groups/cyb3rhq RecordType: dsRecTypeStandard:Groups
+    sudo ${DSCL} localhost -createprop /Local/Default/Groups/cyb3rhq Password "*"
 fi
 
 # Creating the user
-if [[ $(dscl . -read /Users/wazuh) ]]
+if [[ $(dscl . -read /Users/cyb3rhq) ]]
     then
-    echo "wazuh user already exists.";
+    echo "cyb3rhq user already exists.";
 else
-    sudo ${DSCL} localhost -create /Local/Default/Users/wazuh
-    check_errm "Error creating user wazuh" "77"
-    sudo ${DSCL} localhost -createprop /Local/Default/Users/wazuh RecordName wazuh
-    sudo ${DSCL} localhost -createprop /Local/Default/Users/wazuh RealName wazuh
-    sudo ${DSCL} localhost -createprop /Local/Default/Users/wazuh UserShell /usr/bin/false
-    sudo ${DSCL} localhost -createprop /Local/Default/Users/wazuh NFSHomeDirectory /var/wazuh
-    sudo ${DSCL} localhost -createprop /Local/Default/Users/wazuh UniqueID ${new_uid}
-    sudo ${DSCL} localhost -createprop /Local/Default/Users/wazuh PrimaryGroupID ${new_gid}
-    sudo ${DSCL} localhost -append /Local/Default/Groups/wazuh GroupMembership wazuh
-    sudo ${DSCL} localhost -createprop /Local/Default/Users/wazuh Password "*"
+    sudo ${DSCL} localhost -create /Local/Default/Users/cyb3rhq
+    check_errm "Error creating user cyb3rhq" "77"
+    sudo ${DSCL} localhost -createprop /Local/Default/Users/cyb3rhq RecordName cyb3rhq
+    sudo ${DSCL} localhost -createprop /Local/Default/Users/cyb3rhq RealName cyb3rhq
+    sudo ${DSCL} localhost -createprop /Local/Default/Users/cyb3rhq UserShell /usr/bin/false
+    sudo ${DSCL} localhost -createprop /Local/Default/Users/cyb3rhq NFSHomeDirectory /var/cyb3rhq
+    sudo ${DSCL} localhost -createprop /Local/Default/Users/cyb3rhq UniqueID ${new_uid}
+    sudo ${DSCL} localhost -createprop /Local/Default/Users/cyb3rhq PrimaryGroupID ${new_gid}
+    sudo ${DSCL} localhost -append /Local/Default/Groups/cyb3rhq GroupMembership cyb3rhq
+    sudo ${DSCL} localhost -createprop /Local/Default/Users/cyb3rhq Password "*"
 fi
 
 #Hide the fixed users
-dscl . create /Users/wazuh IsHidden 1
+dscl . create /Users/cyb3rhq IsHidden 1

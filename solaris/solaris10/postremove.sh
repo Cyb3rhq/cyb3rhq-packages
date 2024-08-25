@@ -1,11 +1,11 @@
 #!/bin/sh
-# postremove script for wazuh-agent
-# Wazuh, Inc 2015
+# postremove script for cyb3rhq-agent
+# Cyb3rhq, Inc 2015
 
-if getent passwd wazuh > /dev/null 2>&1; then
-  userdel wazuh
+if getent passwd cyb3rhq > /dev/null 2>&1; then
+  userdel cyb3rhq
 fi
 
-if getent group wazuh > /dev/null 2>&1; then
-  groupdel wazuh
+if getent group cyb3rhq > /dev/null 2>&1; then
+  groupdel cyb3rhq
 fi

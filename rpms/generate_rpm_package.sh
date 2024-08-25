@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Wazuh package generator
-# Copyright (C) 2015, Wazuh Inc.
+# Cyb3rhq package generator
+# Copyright (C) 2015, Cyb3rhq Inc.
 #
 # This program is a free software; you can redistribute it
 # and/or modify it under the terms of the GNU General Public
@@ -69,7 +69,7 @@ clean() {
     exit_code=$1
 
     # Clean the files
-    rm -rf ${DOCKERFILE_PATH}/{*.tar.gz,wazuh*} ${DOCKERFILE_PATH}/build.sh ${SOURCES_DIRECTORY}
+    rm -rf ${DOCKERFILE_PATH}/{*.tar.gz,cyb3rhq*} ${DOCKERFILE_PATH}/build.sh ${SOURCES_DIRECTORY}
 
     exit ${exit_code}
 }
@@ -93,7 +93,7 @@ build_rpm() {
 
     # Create an optional parameter to share the local source code as a volume
     if [ ! -z "${LOCAL_SOURCE_CODE}" ]; then
-        CUSTOM_CODE_VOL="-v ${LOCAL_SOURCE_CODE}:/wazuh-local-src:Z"
+        CUSTOM_CODE_VOL="-v ${LOCAL_SOURCE_CODE}:/cyb3rhq-local-src:Z"
         USE_LOCAL_SOURCE_CODE="yes"
     fi
 
@@ -103,7 +103,7 @@ build_rpm() {
     fi
 
     # Build the RPM package with a Docker container
-    docker run -t --rm -v ${OUTDIR}:/var/local/wazuh:Z \
+    docker run -t --rm -v ${OUTDIR}:/var/local/cyb3rhq:Z \
         -v ${CHECKSUMDIR}:/var/local/checksum:Z \
         -v ${LOCAL_SPECS}:/specs:Z \
         ${CUSTOM_CODE_VOL} \
@@ -211,8 +211,8 @@ help() {
     echo "    -c, --checksum <path>        [Optional] Generate checksum on the desired path (by default, if no path is specified it will be generated on the same directory than the package)."
     echo "    --dont-build-docker          [Optional] Locally built docker image will be used instead of generating a new one."
     echo "    --tag                        [Optional] Tag to use with the docker image."
-    echo "    --sources <path>             [Optional] Absolute path containing wazuh source code. This option will use local source code instead of downloading it from GitHub."
-    echo "    --packages-branch <branch>   [Optional] Select Git branch or tag from wazuh-packages repository. e.g ${PACKAGES_BRANCH}"
+    echo "    --sources <path>             [Optional] Absolute path containing cyb3rhq source code. This option will use local source code instead of downloading it from GitHub."
+    echo "    --packages-branch <branch>   [Optional] Select Git branch or tag from cyb3rhq-packages repository. e.g ${PACKAGES_BRANCH}"
     echo "    --dev                        [Optional] Use the SPECS files stored in the host instead of downloading them from GitHub."
     echo "    --src                        [Optional] Generate the source package in the destination directory."
     echo "    --future                     [Optional] Build test future package x.30.0 Used for development purposes."

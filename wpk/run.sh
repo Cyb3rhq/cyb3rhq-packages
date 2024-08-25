@@ -1,7 +1,7 @@
 #!/bin/bash
 set -x
-DIRECTORY="wazuh*"
-REPOSITORY="https://github.com/wazuh/wazuh"
+DIRECTORY="cyb3rhq*"
+REPOSITORY="https://github.com/cyb3rhq/cyb3rhq"
 REFERENCE=""
 JOBS="4"
 OUT_NAME=""
@@ -11,10 +11,10 @@ PKG_NAME=""
 HAVE_PKG_NAME_WIN=false
 HAVE_PKG_NAME_MAC=false
 AWS_REGION="us-east-1"
-KEYPATH="/etc/wazuh"
+KEYPATH="/etc/cyb3rhq"
 WPKCERT="${KEYPATH}/wpkcert.pem"
 WPKKEY="${KEYPATH}/wpkcert.key"
-OUTDIR="/var/local/wazuh"
+OUTDIR="/var/local/cyb3rhq"
 CHECKSUMDIR="/var/local/checksum"
 REVISION="1"
 
@@ -137,7 +137,7 @@ main() {
 
 
     NO_COMPILE=false
-    # Get Wazuh
+    # Get Cyb3rhq
     curl -sL ${REPOSITORY}/tarball/${REFERENCE} | tar zx
     cd ${DIRECTORY}
 
@@ -163,9 +163,9 @@ main() {
         mkdir -p ${OUTDIR}
     fi
 
-    WAZUH_VERSION=$(cat src/VERSION)
-    MAJOR=$(echo ${WAZUH_VERSION} | cut -dv -f2 | cut -d. -f1)
-    MINOR=$(echo ${WAZUH_VERSION} | cut -d. -f2)
+    CYB3RHQ_VERSION=$(cat src/VERSION)
+    MAJOR=$(echo ${CYB3RHQ_VERSION} | cut -dv -f2 | cut -d. -f1)
+    MINOR=$(echo ${CYB3RHQ_VERSION} | cut -d. -f2)
 
     if [ "${NO_COMPILE}" == false ]; then
         # Execute gmake deps if the version is greater or equal to 3.5
@@ -222,10 +222,10 @@ clean() {
     rm -rf src/{addagent,analysisd,client-agent,config,error_messages,external/*}
     rm -rf src/{headers,logcollector,monitord,os_auth,os_crypto,os_csyslogd}
     rm -rf src/{os_dbd,os_execd,os_integrator,os_maild,os_net,os_regex,os_xml,os_zlib}
-    rm -rf src/{remoted,reportd,shared,unit_tests,wazuh_db}
+    rm -rf src/{remoted,reportd,shared,unit_tests,cyb3rhq_db}
 
     # Clean syscheckd folder
-    find src/syscheckd -type f -not -name "wazuh-syscheckd" -not -name "libfimdb.dylib" -not -name "libfimdb.so" -delete
+    find src/syscheckd -type f -not -name "cyb3rhq-syscheckd" -not -name "libfimdb.dylib" -not -name "libfimdb.so" -delete
 
 
     if [[ "${BUILD_TARGET}" != "winagent" ]]; then

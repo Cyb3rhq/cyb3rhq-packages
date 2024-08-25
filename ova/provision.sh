@@ -5,10 +5,10 @@ DEBUG=$2
 
 RESOURCES_PATH="/tmp/unattended_installer"
 BUILDER="builder.sh"
-INSTALLER="wazuh-install.sh"
-SYSTEM_USER="wazuh-user"
-HOSTNAME="wazuh-server"
-INDEXES=("wazuh-alerts-*" "wazuh-archives-*" "wazuh-states-vulnerabilities-*" "wazuh-statistics-*" "wazuh-monitoring-*")
+INSTALLER="cyb3rhq-install.sh"
+SYSTEM_USER="cyb3rhq-user"
+HOSTNAME="cyb3rhq-server"
+INDEXES=("cyb3rhq-alerts-*" "cyb3rhq-archives-*" "cyb3rhq-states-vulnerabilities-*" "cyb3rhq-statistics-*" "cyb3rhq-monitoring-*")
 
 CURRENT_PATH="$( cd $(dirname $0) ; pwd -P )"
 ASSETS_PATH="${CURRENT_PATH}/assets"
@@ -32,7 +32,7 @@ echo "Using ${PACKAGES_REPOSITORY} packages"
 
 # Build install script
 bash ${RESOURCES_PATH}/${BUILDER} ${BUILDER_ARGS}
-WAZUH_VERSION=$(cat ${RESOURCES_PATH}/${INSTALLER} | grep "wazuh_version=" | cut -d "\"" -f 2)
+CYB3RHQ_VERSION=$(cat ${RESOURCES_PATH}/${INSTALLER} | grep "cyb3rhq_version=" | cut -d "\"" -f 2)
 
 # System configuration
 systemConfig
@@ -43,18 +43,18 @@ preInstall
 # Install
 bash ${RESOURCES_PATH}/${INSTALLER} ${INSTALL_ARGS}
 
-systemctl stop filebeat wazuh-manager
+systemctl stop filebeat cyb3rhq-manager
 
 # Delete indexes
 for index in "${INDEXES[@]}"; do
     curl -u admin:admin -XDELETE "https://127.0.0.1:9200/$index" -k
 done
 
-# Recreate empty indexes (wazuh-alerts and wazuh-archives)
-bash /usr/share/wazuh-indexer/bin/indexer-security-init.sh -ho 127.0.0.1
+# Recreate empty indexes (cyb3rhq-alerts and cyb3rhq-archives)
+bash /usr/share/cyb3rhq-indexer/bin/indexer-security-init.sh -ho 127.0.0.1
 
-systemctl stop wazuh-indexer wazuh-dashboard
-systemctl enable wazuh-manager
+systemctl stop cyb3rhq-indexer cyb3rhq-dashboard
+systemctl enable cyb3rhq-manager
 
 
 clean

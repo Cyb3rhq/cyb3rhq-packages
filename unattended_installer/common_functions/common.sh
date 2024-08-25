@@ -1,6 +1,6 @@
-# Common functions for Wazuh installation assistant,
-# wazuh-passwords-tool and wazuh-cert-tool
-# Copyright (C) 2015, Wazuh Inc.
+# Common functions for Cyb3rhq installation assistant,
+# cyb3rhq-passwords-tool and cyb3rhq-cert-tool
+# Copyright (C) 2015, Cyb3rhq Inc.
 #
 # This program is a free software; you can redistribute it
 # and/or modify it under the terms of the GNU General Public
@@ -82,36 +82,36 @@ function common_checkRoot() {
 
 function common_checkInstalled() {
 
-    common_logger -d "Checking Wazuh installation."
-    wazuh_installed=""
+    common_logger -d "Checking Cyb3rhq installation."
+    cyb3rhq_installed=""
     indexer_installed=""
     filebeat_installed=""
     dashboard_installed=""
 
     if [ "${sys_type}" == "yum" ]; then
-        eval "rpm -q wazuh-manager --quiet && wazuh_installed=1"
+        eval "rpm -q cyb3rhq-manager --quiet && cyb3rhq_installed=1"
     elif [ "${sys_type}" == "apt-get" ]; then
-        if dpkg -l wazuh-manager 2>/dev/null | grep -q -E '^ii\s'; then
-            wazuh_installed=1
+        if dpkg -l cyb3rhq-manager 2>/dev/null | grep -q -E '^ii\s'; then
+            cyb3rhq_installed=1
         fi
     fi
 
     if [ -d "/var/ossec" ]; then
-        common_logger -d "There are Wazuh remaining files."
-        wazuh_remaining_files=1
+        common_logger -d "There are Cyb3rhq remaining files."
+        cyb3rhq_remaining_files=1
     fi
 
     if [ "${sys_type}" == "yum" ]; then
-        eval "rpm -q wazuh-indexer --quiet && indexer_installed=1"
+        eval "rpm -q cyb3rhq-indexer --quiet && indexer_installed=1"
 
     elif [ "${sys_type}" == "apt-get" ]; then
-        if dpkg -l wazuh-indexer 2>/dev/null | grep -q -E '^ii\s'; then
+        if dpkg -l cyb3rhq-indexer 2>/dev/null | grep -q -E '^ii\s'; then
             indexer_installed=1
         fi
     fi
 
-    if [ -d "/var/lib/wazuh-indexer/" ] || [ -d "/usr/share/wazuh-indexer" ] || [ -d "/etc/wazuh-indexer" ] || [ -f "${base_path}/search-guard-tlstool*" ]; then
-        common_logger -d "There are Wazuh indexer remaining files."
+    if [ -d "/var/lib/cyb3rhq-indexer/" ] || [ -d "/usr/share/cyb3rhq-indexer" ] || [ -d "/etc/cyb3rhq-indexer" ] || [ -f "${base_path}/search-guard-tlstool*" ]; then
+        common_logger -d "There are Cyb3rhq indexer remaining files."
         indexer_remaining_files=1
     fi
 
@@ -129,15 +129,15 @@ function common_checkInstalled() {
     fi
 
     if [ "${sys_type}" == "yum" ]; then
-        eval "rpm -q wazuh-dashboard --quiet && dashboard_installed=1"
+        eval "rpm -q cyb3rhq-dashboard --quiet && dashboard_installed=1"
     elif [ "${sys_type}" == "apt-get" ]; then
-        if dpkg -l wazuh-dashboard 2>/dev/null | grep -q -E '^ii\s'; then
+        if dpkg -l cyb3rhq-dashboard 2>/dev/null | grep -q -E '^ii\s'; then
             dashboard_installed=1
         fi
     fi
 
-    if [ -d "/var/lib/wazuh-dashboard/" ] || [ -d "/usr/share/wazuh-dashboard" ] || [ -d "/etc/wazuh-dashboard" ] || [ -d "/run/wazuh-dashboard/" ]; then
-        common_logger -d "There are Wazuh dashboard remaining files."
+    if [ -d "/var/lib/cyb3rhq-dashboard/" ] || [ -d "/usr/share/cyb3rhq-dashboard" ] || [ -d "/etc/cyb3rhq-dashboard" ] || [ -d "/run/cyb3rhq-dashboard/" ]; then
+        common_logger -d "There are Cyb3rhq dashboard remaining files."
         dashboard_remaining_files=1
     fi
 
@@ -160,9 +160,9 @@ function common_checkSystem() {
 
 }
 
-function common_checkWazuhConfigYaml() {
+function common_checkCyb3rhqConfigYaml() {
 
-    common_logger -d "Checking Wazuh YAML configuration file."
+    common_logger -d "Checking Cyb3rhq YAML configuration file."
     filecorrect=$(cert_parseYaml "${config_file}" | grep -Ev '^#|^\s*$' | grep -Pzc "\A(\s*(nodes_indexer__name|nodes_indexer__ip|nodes_server__name|nodes_server__ip|nodes_server__node_type|nodes_dashboard__name|nodes_dashboard__ip)=.*?)+\Z")
     if [[ "${filecorrect}" -ne 1 ]]; then
         common_logger -e "The configuration file ${config_file} does not have a correct format."
@@ -196,18 +196,18 @@ function common_remove_gpg_key() {
 
     common_logger -d "Removing GPG key from system."
     if [ "${sys_type}" == "yum" ]; then
-        if { rpm -q gpg-pubkey --qf '%{NAME}-%{VERSION}-%{RELEASE}\t%{SUMMARY}\n' | grep "Wazuh"; } >/dev/null ; then
-            key=$(rpm -q gpg-pubkey --qf '%{NAME}-%{VERSION}-%{RELEASE}\t%{SUMMARY}\n' | grep "Wazuh Signing Key" | awk '{print $1}' )
+        if { rpm -q gpg-pubkey --qf '%{NAME}-%{VERSION}-%{RELEASE}\t%{SUMMARY}\n' | grep "Cyb3rhq"; } >/dev/null ; then
+            key=$(rpm -q gpg-pubkey --qf '%{NAME}-%{VERSION}-%{RELEASE}\t%{SUMMARY}\n' | grep "Cyb3rhq Signing Key" | awk '{print $1}' )
             rpm -e "${key}"
         else
-            common_logger "Wazuh GPG key not found in the system"
+            common_logger "Cyb3rhq GPG key not found in the system"
             return 1
         fi
     elif [ "${sys_type}" == "apt-get" ]; then
-        if [ -f "/usr/share/keyrings/wazuh.gpg" ]; then
-            rm -rf "/usr/share/keyrings/wazuh.gpg" "${debug}"
+        if [ -f "/usr/share/keyrings/cyb3rhq.gpg" ]; then
+            rm -rf "/usr/share/keyrings/cyb3rhq.gpg" "${debug}"
         else
-            common_logger "Wazuh GPG key not found in the system"
+            common_logger "Cyb3rhq GPG key not found in the system"
             return 1
         fi
     fi

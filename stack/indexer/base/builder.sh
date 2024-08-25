@@ -2,8 +2,8 @@
 
 set -x
 
-# Wazuh-indexer base builder
-# Copyright (C) 2022, Wazuh Inc.
+# Cyb3rhq-indexer base builder
+# Copyright (C) 2022, Cyb3rhq Inc.
 #
 # This program is a free software; you can redistribute it
 # and/or modify it under the terms of the GNU General Public
@@ -17,7 +17,7 @@ revision="$2"
 future="$3"
 reference="$4"
 opensearch_version="2.10.0"
-base_dir=/opt/wazuh-indexer-base
+base_dir=/opt/cyb3rhq-indexer-base
 
 # -----------------------------------------------------------------------------
 
@@ -31,9 +31,9 @@ fi
 
 # Including files
 if [ "${reference}" ];then
-    curl -sL https://github.com/wazuh/wazuh-packages/tarball/"${reference}" | tar xz
-    cp -r ./wazuh*/* /root/
-    version=$(curl -sL https://raw.githubusercontent.com/wazuh/wazuh-packages/${reference}/VERSION | cat)
+    curl -sL https://github.com/cyb3rhq/cyb3rhq-packages/tarball/"${reference}" | tar xz
+    cp -r ./cyb3rhq*/* /root/
+    version=$(curl -sL https://raw.githubusercontent.com/cyb3rhq/cyb3rhq-packages/${reference}/VERSION | cat)
 else
     version=$(cat /root/VERSION)
 fi
@@ -58,12 +58,12 @@ find -type l -exec rm -rf {} \;
 find -name "*.bat" -exec rm -rf {} \;
 rm -rf README.md manifest.yml opensearch-tar-install.sh logs
 sed -i 's|OPENSEARCH_DISTRIBUTION_TYPE=tar|OPENSEARCH_DISTRIBUTION_TYPE=rpm|g' bin/opensearch-env
-sed -i 's|"$OPENSEARCH_HOME"/config|/etc/wazuh-indexer|g' bin/opensearch-env
+sed -i 's|"$OPENSEARCH_HOME"/config|/etc/cyb3rhq-indexer|g' bin/opensearch-env
 cp -r /root/stack/indexer/base/files/systemd-entrypoint bin/
-mkdir -p ./etc/wazuh-indexer/
-cp -r ./config/* ./etc/wazuh-indexer/
+mkdir -p ./etc/cyb3rhq-indexer/
+cp -r ./config/* ./etc/cyb3rhq-indexer/
 rm -rf ./config
-cp -r /root/stack/indexer/base/files/etc/wazuh-indexer/* ./etc/wazuh-indexer/
+cp -r /root/stack/indexer/base/files/etc/cyb3rhq-indexer/* ./etc/cyb3rhq-indexer/
 cp -r /root/stack/indexer/base/files/etc/sysconfig ./etc/
 cp -r /root/stack/indexer/base/files/etc/init.d ./etc/
 cp -r /root/stack/indexer/base/files/usr ./
@@ -95,5 +95,5 @@ find -type f -perm 744 -exec chmod 740 {} \;
 
 # Base output
 cd /opt
-tar -Jcvf wazuh-indexer-base-"${version}"-"${revision}"-linux-${architecture}.tar.xz wazuh-indexer-base
-cp wazuh-indexer-base-"${version}"-"${revision}"-linux-${architecture}.tar.xz /tmp/output
+tar -Jcvf cyb3rhq-indexer-base-"${version}"-"${revision}"-linux-${architecture}.tar.xz cyb3rhq-indexer-base
+cp cyb3rhq-indexer-base-"${version}"-"${revision}"-linux-${architecture}.tar.xz /tmp/output

@@ -1,10 +1,10 @@
-NAME=Wazuh - Wazuh unifies historically separate functions into a single agent and platform architecture. Providing protection for public clouds, private clouds, and on-premise data centers.
-PKG="wazuh-agent"
+NAME=Cyb3rhq - Cyb3rhq unifies historically separate functions into a single agent and platform architecture. Providing protection for public clouds, private clouds, and on-premise data centers.
+PKG="cyb3rhq-agent"
 VERSION="5.0.0"
 ARCH="i386"
 CLASSES="none"
 CATEGORY="system"
-VENDOR="Wazuh, Inc <info@wazuh.com>"
+VENDOR="Cyb3rhq, Inc <info@wazuh.com>"
 PSTAMP="12Dec2024"
 EMAIL="info@wazuh.com"
 ISTATES="S s 1 2 3"

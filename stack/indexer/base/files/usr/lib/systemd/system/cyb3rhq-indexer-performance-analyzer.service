@@ -1,0 +1,16 @@
+[Unit]
+Description=Cyb3rhq-indexer Performance Analyzer
+PartOf=cyb3rhq-indexer.service
+After=cyb3rhq-indexer.service
+
+[Service]
+ExecStart=/usr/share/cyb3rhq-indexer/bin/opensearch-performance-analyzer/performance-analyzer-agent-cli
+Restart=on-failure
+User=cyb3rhq-indexer
+Group=cyb3rhq-indexer
+Environment=OPENSEARCH_HOME=/usr/share/cyb3rhq-indexer
+Environment=OPENSEARCH_PATH_CONF=/etc/cyb3rhq-indexer/
+WorkingDirectory=/usr/share/cyb3rhq-indexer
+
+[Install]
+WantedBy=cyb3rhq-indexer.service

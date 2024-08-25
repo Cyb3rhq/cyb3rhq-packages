@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# Program to build the Wazuh Virtual Machine
-# Wazuh package generator
-# Copyright (C) 2015, Wazuh Inc.
+# Program to build the Cyb3rhq Virtual Machine
+# Cyb3rhq package generator
+# Copyright (C) 2015, Cyb3rhq Inc.
 #
 # This program is a free software; you can redistribute it
 # and/or modify it under the terms of the GNU General Public
@@ -33,7 +33,7 @@ DEBUG="no"
 help () {
     echo -e ""
     echo -e "NAME"
-    echo -e "$(basename "$0") - Build Wazuh OVA."
+    echo -e "$(basename "$0") - Build Cyb3rhq OVA."
     echo -e ""
     echo -e "SYNOPSIS"
     echo -e "        $(basename "$0") -r | -s | -c | -f | -h"
@@ -66,7 +66,7 @@ clean() {
 
     cd "${scriptpath}"
     vagrant destroy -f
-    OVA_VMDK="wazuh-${OVA_VERSION}-disk001.vmdk"
+    OVA_VMDK="cyb3rhq-${OVA_VERSION}-disk001.vmdk"
     rm -f "${OVA_VM}" "${OVF_VM}" "${OVA_VMDK}" "${OVA_FIXED}"
 
     exit "${exit_code}"
@@ -74,9 +74,9 @@ clean() {
 
 build_ova() {
 
-    OVA_VM="wazuh-${OVA_VERSION}.ova"
-    OVF_VM="wazuh-${OVA_VERSION}.ovf"
-    OVA_FIXED="wazuh-${OVA_VERSION}-fixed.ova"
+    OVA_VM="cyb3rhq-${OVA_VERSION}.ova"
+    OVF_VM="cyb3rhq-${OVA_VERSION}.ovf"
+    OVA_FIXED="cyb3rhq-${OVA_VERSION}-fixed.ova"
 
     export PACKAGES_REPOSITORY
     export DEBUG
@@ -96,15 +96,15 @@ build_ova() {
     echo "Exporting ova"
 
     # Get machine name
-    VM_EXPORT=$(vboxmanage list vms | grep -i vm_wazuh | cut -d "\"" -f2)
+    VM_EXPORT=$(vboxmanage list vms | grep -i vm_cyb3rhq | cut -d "\"" -f2)
 
     # Create OVA with machine
     vboxmanage export "${VM_EXPORT}" -o "${OVA_VM}" \
     --vsys 0 \
-    --product "Wazuh v${OVA_VERSION} OVA" \
-    --producturl "https://packages.wazuh.com/vm/wazuh-${OVA_VERSION}.ova" \
-    --vendor "Wazuh, inc <info@wazuh.com>" --vendorurl "https://wazuh.com" \
-    --version "$OVA_VERSION" --description "Wazuh enhances security visibility in your infrastructure by monitoring endpoints at the operating system and application levels. Its capabilities include log analysis, file integrity monitoring, intrusion detection, and compliance monitoring." \
+    --product "Cyb3rhq v${OVA_VERSION} OVA" \
+    --producturl "https://packages.wazuh.com/vm/cyb3rhq-${OVA_VERSION}.ova" \
+    --vendor "Cyb3rhq, inc <info@wazuh.com>" --vendorurl "https://wazuh.com" \
+    --version "$OVA_VERSION" --description "Cyb3rhq enhances security visibility in your infrastructure by monitoring endpoints at the operating system and application levels. Its capabilities include log analysis, file integrity monitoring, intrusion detection, and compliance monitoring." \
     || clean 1
 
     vagrant destroy -f
@@ -217,7 +217,7 @@ main() {
     rm -rf ${UNATTENDED_RESOURCES_FOLDER}
 
     # Standarize OVA
-    bash setOVADefault.sh "${scriptpath}" "${OUTPUT_DIR}/${OVA_VM}" "${OUTPUT_DIR}/${OVA_VM}" "${scriptpath}/wazuh_ovf_template" "${OVA_VERSION}"  || clean 1
+    bash setOVADefault.sh "${scriptpath}" "${OUTPUT_DIR}/${OVA_VM}" "${OUTPUT_DIR}/${OVA_VM}" "${scriptpath}/cyb3rhq_ovf_template" "${OVA_VERSION}"  || clean 1
 
     if [ "${CHECKSUM}" = "yes" ]; then
         mkdir -p "${CHECKSUM_DIR}"

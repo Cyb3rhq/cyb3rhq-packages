@@ -1,17 +1,17 @@
-# Wazuh - Filebeat configuration file
+# Cyb3rhq - Filebeat configuration file
 output.elasticsearch.hosts: <elasticsearch_ip>:9200
 output.elasticsearch.password: <elasticsearch_password>
 
 filebeat.modules:
-  - module: wazuh
+  - module: cyb3rhq
     alerts:
       enabled: true
     archives:
       enabled: false
 
 setup.template.json.enabled: true
-setup.template.json.path: /etc/filebeat/wazuh-template.json
-setup.template.json.name: wazuh
+setup.template.json.path: /etc/filebeat/cyb3rhq-template.json
+setup.template.json.name: cyb3rhq
 setup.template.overwrite: true
 setup.ilm.enabled: false
 

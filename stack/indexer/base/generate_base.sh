@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Wazuh-indexer base builder launcher
-# Copyright (C) 2022, Wazuh Inc.
+# Cyb3rhq-indexer base builder launcher
+# Copyright (C) 2022, Cyb3rhq Inc.
 #
 # This program is a free software; you can redistribute it
 # and/or modify it under the terms of the GNU General Public
@@ -67,7 +67,7 @@ help() {
     echo "Usage: $0 [OPTIONS]"
     echo
     echo "    -s, --store <path>                [Optional] Set the destination path of package. By default, an output folder will be created."
-    echo "    --reference <ref>                 [Optional] wazuh-packages branch or tag."
+    echo "    --reference <ref>                 [Optional] cyb3rhq-packages branch or tag."
     echo "    --future                          [Optional] Build test future package 99.99.0 Used for development purposes."
     echo "    -r, --revision <rev>              [Optional] Package revision. By default ${revision}"
     echo "    -h, --help                        Show this help."

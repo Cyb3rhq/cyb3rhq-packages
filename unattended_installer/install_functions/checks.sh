@@ -1,5 +1,5 @@
-# Wazuh installer - checks.sh functions.
-# Copyright (C) 2015, Wazuh Inc.
+# Cyb3rhq installer - checks.sh functions.
+# Copyright (C) 2015, Cyb3rhq Inc.
 #
 # This program is a free software; you can redistribute it
 # and/or modify it under the terms of the GNU General Public
@@ -23,7 +23,7 @@ function checks_arguments() {
 
     if [ -n "${port_specified}" ]; then
         if [ -z "${AIO}" ] && [ -z "${dashboard}" ]; then
-            common_logger -e "The argument -p|--port can only be used with -a|--all-in-one or -wd|--wazuh-dashboard."
+            common_logger -e "The argument -p|--port can only be used with -a|--all-in-one or -wd|--cyb3rhq-dashboard."
             exit 1
         fi
     fi
@@ -31,7 +31,7 @@ function checks_arguments() {
     # -------------- Offline installation ---------------------
 
     if [ -n "${offline_install}" ]; then
-        if [ -z "${AIO}" ] && [ -z "${dashboard}" ] && [ -z "${indexer}" ] && [ -z "${wazuh}" ]; then
+        if [ -z "${AIO}" ] && [ -z "${dashboard}" ] && [ -z "${indexer}" ] && [ -z "${cyb3rhq}" ]; then
             common_logger -e "The -of|--offline-installation option must be used with -a, -ws, -wi, or -wd."
             exit 1
         fi
@@ -49,15 +49,15 @@ function checks_arguments() {
         fi
     fi
 
-    if [[ -n "${configurations}" && ( -n "${AIO}" || -n "${indexer}" || -n "${dashboard}" || -n "${wazuh}" || -n "${overwrite}" || -n "${start_indexer_cluster}" || -n "${tar_conf}" || -n "${uninstall}" ) ]]; then
-        common_logger -e "The argument -g|--generate-config-files can't be used with -a|--all-in-one, -o|--overwrite, -s|--start-cluster, -t|--tar, -u|--uninstall, -wd|--wazuh-dashboard, -wi|--wazuh-indexer, or -ws|--wazuh-server."
+    if [[ -n "${configurations}" && ( -n "${AIO}" || -n "${indexer}" || -n "${dashboard}" || -n "${cyb3rhq}" || -n "${overwrite}" || -n "${start_indexer_cluster}" || -n "${tar_conf}" || -n "${uninstall}" ) ]]; then
+        common_logger -e "The argument -g|--generate-config-files can't be used with -a|--all-in-one, -o|--overwrite, -s|--start-cluster, -t|--tar, -u|--uninstall, -wd|--cyb3rhq-dashboard, -wi|--cyb3rhq-indexer, or -ws|--cyb3rhq-server."
         exit 1
     fi
 
     # -------------- Overwrite --------------------------------------
 
-    if [ -n "${overwrite}" ] && [ -z "${AIO}" ] && [ -z "${indexer}" ] && [ -z "${dashboard}" ] && [ -z "${wazuh}" ]; then
-        common_logger -e "The argument -o|--overwrite must be used in conjunction with -a|--all-in-one, -wd|--wazuh-dashboard, -wi|--wazuh-indexer, or -ws|--wazuh-server."
+    if [ -n "${overwrite}" ] && [ -z "${AIO}" ] && [ -z "${indexer}" ] && [ -z "${dashboard}" ] && [ -z "${cyb3rhq}" ]; then
+        common_logger -e "The argument -o|--overwrite must be used in conjunction with -a|--all-in-one, -wd|--cyb3rhq-dashboard, -wi|--cyb3rhq-indexer, or -ws|--cyb3rhq-server."
         exit 1
     fi
 
@@ -65,13 +65,13 @@ function checks_arguments() {
 
     if [ -n "${uninstall}" ]; then
 
-        if [ -n "$AIO" ] || [ -n "$indexer" ] || [ -n "$dashboard" ] || [ -n "$wazuh" ]; then
+        if [ -n "$AIO" ] || [ -n "$indexer" ] || [ -n "$dashboard" ] || [ -n "$cyb3rhq" ]; then
             common_logger -e "It is not possible to uninstall and install in the same operation. If you want to overwrite the components use -o|--overwrite."
             exit 1
         fi
 
-        if [ -z "${wazuh_installed}" ] && [ -z "${wazuh_remaining_files}" ]; then
-            common_logger "Wazuh manager not found in the system so it was not uninstalled."
+        if [ -z "${cyb3rhq_installed}" ] && [ -z "${cyb3rhq_remaining_files}" ]; then
+            common_logger "Cyb3rhq manager not found in the system so it was not uninstalled."
         fi
 
         if [ -z "${filebeat_installed}" ] && [ -z "${filebeat_remaining_files}" ]; then
@@ -79,11 +79,11 @@ function checks_arguments() {
         fi
 
         if [ -z "${indexer_installed}" ] && [ -z "${indexer_remaining_files}" ]; then
-            common_logger "Wazuh indexer not found in the system so it was not uninstalled."
+            common_logger "Cyb3rhq indexer not found in the system so it was not uninstalled."
         fi
 
         if [ -z "${dashboard_installed}" ] && [ -z "${dashboard_remaining_files}" ]; then
-            common_logger "Wazuh dashboard not found in the system so it was not uninstalled."
+            common_logger "Cyb3rhq dashboard not found in the system so it was not uninstalled."
         fi
 
     fi
@@ -92,8 +92,8 @@ function checks_arguments() {
 
     if [ -n "${AIO}" ]; then
 
-        if [ -n "$indexer" ] || [ -n "$dashboard" ] || [ -n "$wazuh" ]; then
-            common_logger -e "Argument -a|--all-in-one is not compatible with -wi|--wazuh-indexer, -wd|--wazuh-dashboard or -ws|--wazuh-server."
+        if [ -n "$indexer" ] || [ -n "$dashboard" ] || [ -n "$cyb3rhq" ]; then
+            common_logger -e "Argument -a|--all-in-one is not compatible with -wi|--cyb3rhq-indexer, -wd|--cyb3rhq-dashboard or -ws|--cyb3rhq-server."
             exit 1
         fi
 
@@ -101,16 +101,16 @@ function checks_arguments() {
             installCommon_rollBack
         fi
 
-        if  [ -z "${overwrite}" ] && { [ -n "${wazuh_installed}" ] || [ -n "${wazuh_remaining_files}" ]; }; then
-            common_logger -e "Wazuh manager already installed."
+        if  [ -z "${overwrite}" ] && { [ -n "${cyb3rhq_installed}" ] || [ -n "${cyb3rhq_remaining_files}" ]; }; then
+            common_logger -e "Cyb3rhq manager already installed."
             installedComponent=1
         fi
         if [ -z "${overwrite}" ] && { [ -n "${indexer_installed}" ] || [ -n "${indexer_remaining_files}" ]; };then
-            common_logger -e "Wazuh indexer already installed."
+            common_logger -e "Cyb3rhq indexer already installed."
             installedComponent=1
         fi
         if [ -z "${overwrite}" ] && { [ -n "${dashboard_installed}" ] || [ -n "${dashboard_remaining_files}" ]; }; then
-            common_logger -e "Wazuh dashboard already installed."
+            common_logger -e "Cyb3rhq dashboard already installed."
             installedComponent=1
         fi
         if [ -z "${overwrite}" ] && { [ -n "${filebeat_installed}" ] || [ -n "${filebeat_remaining_files}" ]; }; then
@@ -132,33 +132,33 @@ function checks_arguments() {
             if [ -n "${overwrite}" ]; then
                 installCommon_rollBack
             else
-                common_logger -e "Wazuh indexer is already installed in this node or some of its files have not been removed. Use option -o|--overwrite to overwrite all components."
+                common_logger -e "Cyb3rhq indexer is already installed in this node or some of its files have not been removed. Use option -o|--overwrite to overwrite all components."
                 exit 1
             fi
         fi
     fi
 
-    # -------------- Wazuh dashboard --------------------------------
+    # -------------- Cyb3rhq dashboard --------------------------------
 
     if [ -n "${dashboard}" ]; then
         if [ -n "${dashboard_installed}" ] || [ -n "${dashboard_remaining_files}" ]; then
             if [ -n "${overwrite}" ]; then
                 installCommon_rollBack
             else
-                common_logger -e "Wazuh dashboard is already installed in this node or some of its files have not been removed. Use option -o|--overwrite to overwrite all components."
+                common_logger -e "Cyb3rhq dashboard is already installed in this node or some of its files have not been removed. Use option -o|--overwrite to overwrite all components."
                 exit 1
             fi
         fi
     fi
 
-    # -------------- Wazuh ------------------------------------------
+    # -------------- Cyb3rhq ------------------------------------------
 
-    if [ -n "${wazuh}" ]; then
-        if [ -n "${wazuh_installed}" ] || [ -n "${wazuh_remaining_files}" ] || [ -n "${filebeat_installed}" ] || [ -n "${filebeat_remaining_files}" ]; then
+    if [ -n "${cyb3rhq}" ]; then
+        if [ -n "${cyb3rhq_installed}" ] || [ -n "${cyb3rhq_remaining_files}" ] || [ -n "${filebeat_installed}" ] || [ -n "${filebeat_remaining_files}" ]; then
             if [ -n "${overwrite}" ]; then
                 installCommon_rollBack
             else
-                common_logger -e "Wazuh server components (wazuh-manager and filebeat) are already installed in this node or some of their files have not been removed. Use option -o|--overwrite to overwrite all components."
+                common_logger -e "Cyb3rhq server components (cyb3rhq-manager and filebeat) are already installed in this node or some of their files have not been removed. Use option -o|--overwrite to overwrite all components."
                 exit 1
             fi
         fi
@@ -166,20 +166,20 @@ function checks_arguments() {
 
     # -------------- Cluster start ----------------------------------
 
-    if [[ -n "${start_indexer_cluster}" && ( -n "${AIO}" || -n "${indexer}" || -n "${dashboard}" || -n "${wazuh}" || -n "${overwrite}" || -n "${configurations}" || -n "${tar_conf}" || -n "${uninstall}") ]]; then
-        common_logger -e "The argument -s|--start-cluster can't be used with -a|--all-in-one, -g|--generate-config-files,-o|--overwrite , -u|--uninstall, -wi|--wazuh-indexer, -wd|--wazuh-dashboard, -s|--start-cluster, -ws|--wazuh-server."
+    if [[ -n "${start_indexer_cluster}" && ( -n "${AIO}" || -n "${indexer}" || -n "${dashboard}" || -n "${cyb3rhq}" || -n "${overwrite}" || -n "${configurations}" || -n "${tar_conf}" || -n "${uninstall}") ]]; then
+        common_logger -e "The argument -s|--start-cluster can't be used with -a|--all-in-one, -g|--generate-config-files,-o|--overwrite , -u|--uninstall, -wi|--cyb3rhq-indexer, -wd|--cyb3rhq-dashboard, -s|--start-cluster, -ws|--cyb3rhq-server."
         exit 1
     fi
 
     # -------------- Global -----------------------------------------
 
-    if [ -z "${AIO}" ] && [ -z "${indexer}" ] && [ -z "${dashboard}" ] && [ -z "${wazuh}" ] && [ -z "${start_indexer_cluster}" ] && [ -z "${configurations}" ] && [ -z "${uninstall}" ] && [ -z "${download}" ]; then
-        common_logger -e "At least one of these arguments is necessary -a|--all-in-one, -g|--generate-config-files, -wi|--wazuh-indexer, -wd|--wazuh-dashboard, -s|--start-cluster, -ws|--wazuh-server, -u|--uninstall, -dw|--download-wazuh."
+    if [ -z "${AIO}" ] && [ -z "${indexer}" ] && [ -z "${dashboard}" ] && [ -z "${cyb3rhq}" ] && [ -z "${start_indexer_cluster}" ] && [ -z "${configurations}" ] && [ -z "${uninstall}" ] && [ -z "${download}" ]; then
+        common_logger -e "At least one of these arguments is necessary -a|--all-in-one, -g|--generate-config-files, -wi|--cyb3rhq-indexer, -wd|--cyb3rhq-dashboard, -s|--start-cluster, -ws|--cyb3rhq-server, -u|--uninstall, -dw|--download-cyb3rhq."
         exit 1
     fi
 
     if [ -n "${force}" ] && [ -z  "${dashboard}" ]; then
-        common_logger -e "The -fd|--force-install-dashboard argument needs to be used alongside -wd|--wazuh-dashboard."
+        common_logger -e "The -fd|--force-install-dashboard argument needs to be used alongside -wd|--cyb3rhq-dashboard."
         exit 1
     fi
 
@@ -273,7 +273,7 @@ function checks_health() {
         fi
     fi
 
-    if [ -n "${wazuh}" ]; then
+    if [ -n "${cyb3rhq}" ]; then
         if [ "${cores}" -lt 2 ] || [ "${ram_gb}" -lt 1700 ]; then
             common_logger -e "Your system does not meet the recommended minimum hardware requirements of 2Gb of RAM and 2 CPU cores . If you want to proceed with the installation use the -i option to ignore these requirements."
             exit 1
@@ -294,32 +294,32 @@ function checks_names() {
 
     common_logger -d "Checking node names in the configuration file."
     if [ -n "${indxname}" ] && [ -n "${dashname}" ] && [ "${indxname}" == "${dashname}" ]; then
-        common_logger -e "The node names for Wazuh indexer and Wazuh dashboard must be different."
+        common_logger -e "The node names for Cyb3rhq indexer and Cyb3rhq dashboard must be different."
         exit 1
     fi
 
     if [ -n "${indxname}" ] && [ -n "${winame}" ] && [ "${indxname}" == "${winame}" ]; then
-        common_logger -e "The node names for Elastisearch and Wazuh must be different."
+        common_logger -e "The node names for Elastisearch and Cyb3rhq must be different."
         exit 1
     fi
 
     if [ -n "${winame}" ] && [ -n "${dashname}" ] && [ "${winame}" == "${dashname}" ]; then
-        common_logger -e "The node names for Wazuh server and Wazuh indexer must be different."
+        common_logger -e "The node names for Cyb3rhq server and Cyb3rhq indexer must be different."
         exit 1
     fi
 
     if [ -n "${winame}" ] && ! echo "${server_node_names[@]}" | grep -w -q "${winame}"; then
-        common_logger -e "The Wazuh server node name ${winame} does not appear on the configuration file."
+        common_logger -e "The Cyb3rhq server node name ${winame} does not appear on the configuration file."
         exit 1
     fi
 
     if [ -n "${indxname}" ] && ! echo "${indexer_node_names[@]}" | grep -w -q "${indxname}"; then
-        common_logger -e "The Wazuh indexer node name ${indxname} does not appear on the configuration file."
+        common_logger -e "The Cyb3rhq indexer node name ${indxname} does not appear on the configuration file."
         exit 1
     fi
 
     if [ -n "${dashname}" ] && ! echo "${dashboard_node_names[@]}" | grep -w -q "${dashname}"; then
-        common_logger -e "The Wazuh dashboard node name ${dashname} does not appear on the configuration file."
+        common_logger -e "The Cyb3rhq dashboard node name ${dashname} does not appear on the configuration file."
         exit 1
     fi
 
@@ -339,22 +339,22 @@ function checks_previousCertificate() {
     fi
 
     if [ -n "${indxname}" ]; then
-        if ! tar -tf "${tar_file}" | grep -q -E ^wazuh-install-files/"${indxname}".pem  || ! tar -tf "${tar_file}" | grep -q -E ^wazuh-install-files/"${indxname}"-key.pem; then
+        if ! tar -tf "${tar_file}" | grep -q -E ^cyb3rhq-install-files/"${indxname}".pem  || ! tar -tf "${tar_file}" | grep -q -E ^cyb3rhq-install-files/"${indxname}"-key.pem; then
             common_logger -e "There is no certificate for the indexer node ${indxname} in ${tar_file}."
             exit 1
         fi
     fi
 
     if [ -n "${dashname}" ]; then
-        if ! tar -tf "${tar_file}" | grep -q -E ^wazuh-install-files/"${dashname}".pem || ! tar -tf "${tar_file}" | grep -q -E ^wazuh-install-files/"${dashname}"-key.pem; then
-            common_logger -e "There is no certificate for the Wazuh dashboard node ${dashname} in ${tar_file}."
+        if ! tar -tf "${tar_file}" | grep -q -E ^cyb3rhq-install-files/"${dashname}".pem || ! tar -tf "${tar_file}" | grep -q -E ^cyb3rhq-install-files/"${dashname}"-key.pem; then
+            common_logger -e "There is no certificate for the Cyb3rhq dashboard node ${dashname} in ${tar_file}."
             exit 1
         fi
     fi
 
     if [ -n "${winame}" ]; then
-        if ! tar -tf "${tar_file}" | grep -q -E ^wazuh-install-files/"${winame}".pem || ! tar -tf "${tar_file}" | grep -q -E ^wazuh-install-files/"${winame}"-key.pem; then
-            common_logger -e "There is no certificate for the wazuh server node ${winame} in ${tar_file}."
+        if ! tar -tf "${tar_file}" | grep -q -E ^cyb3rhq-install-files/"${winame}".pem || ! tar -tf "${tar_file}" | grep -q -E ^cyb3rhq-install-files/"${winame}"-key.pem; then
+            common_logger -e "There is no certificate for the cyb3rhq server node ${winame} in ${tar_file}."
             exit 1
         fi
     fi
@@ -397,7 +397,7 @@ function checks_ports() {
     for i in "${!ports[@]}"; do
         if eval "${port_command}""${ports[i]}" > /dev/null; then
             used_port=1
-            common_logger -e "Port ${ports[i]} is being used by another process. Please, check it before installing Wazuh."
+            common_logger -e "Port ${ports[i]} is being used by another process. Please, check it before installing Cyb3rhq."
         fi
     done
 
@@ -427,7 +427,7 @@ function checks_available_port() {
     if [ "$chosen_port" -ne "${http_port}" ]; then
         for port in "${ports_list[@]}"; do
             if [ "$chosen_port" -eq "$port" ]; then
-                common_logger -e "Port ${chosen_port} is reserved by Wazuh. Please, choose another port."
+                common_logger -e "Port ${chosen_port} is reserved by Cyb3rhq. Please, choose another port."
                 exit 1
             fi
         done

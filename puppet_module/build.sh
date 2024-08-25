@@ -1,14 +1,14 @@
 #!/bin/bash
 set -e
 
-wazuh_branch=$1
+cyb3rhq_branch=$1
 
 download_sources() {
-    if ! curl -L https://github.com/wazuh/wazuh-puppet/tarball/${wazuh_branch} | tar zx ; then
+    if ! curl -L https://github.com/cyb3rhq/cyb3rhq-puppet/tarball/${cyb3rhq_branch} | tar zx ; then
         echo "Error downloading the source code from GitHub."
         exit 1
     fi
-    cd wazuh-*
+    cd cyb3rhq-*
 }
 
 build_module() {
