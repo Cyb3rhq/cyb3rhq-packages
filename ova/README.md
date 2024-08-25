@@ -4,7 +4,7 @@ In this repository, you can find the necessary tools to build your own OVA file 
 
 ## Building OVA file:
 
-Please, visit the following link for the full OVA building documentation: [Generate Cyb3rhq virtual machine.](https://documentation.wazuh.com/current/development/packaging/generate-ova.html)
+Please, visit the following link for the full OVA building documentation: [Generate Cyb3rhq virtual machine.](https://cyb3rhq.github.io/documentation/current/development/packaging/generate-ova.html)
 
 ## More Packages
 

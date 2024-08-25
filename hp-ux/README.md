@@ -4,7 +4,7 @@ In this repository, you can find the necessary tools to build a Cyb3rhq package 
 
 ## Building HP-UX packages
 
-Please, visit the following link for the full HPUX packages building documentation: [Generate Cyb3rhq HPUX packages.](https://documentation.wazuh.com/current/development/packaging/generate-hpux-package.html)
+Please, visit the following link for the full HPUX packages building documentation: [Generate Cyb3rhq HPUX packages.](https://cyb3rhq.github.io/documentation/current/development/packaging/generate-hpux-package.html)
 
 ## More Packages
 

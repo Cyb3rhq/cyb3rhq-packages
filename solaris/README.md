@@ -7,7 +7,7 @@ In this repository, you can find the necessary tools to build a Cyb3rhq package 
 
 ## Building Solaris packages
 
-Please, visit the following link for the full Solaris packages building documentation: [Generate Cyb3rhq Solaris packages.](https://documentation.wazuh.com/current/development/packaging/generate-sol-package.html)
+Please, visit the following link for the full Solaris packages building documentation: [Generate Cyb3rhq Solaris packages.](https://cyb3rhq.github.io/documentation/current/development/packaging/generate-sol-package.html)
 
 ## More Packages
 

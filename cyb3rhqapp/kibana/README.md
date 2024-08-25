@@ -5,7 +5,7 @@ In this repository, you can find the necessary tools to build a Cyb3rhq Kibana A
 
 ## Building Cyb3rhq Kibana app packages
 
-Please, visit the following link for the full Cyb3rhq Kibana plugin packages building documentation: [Generate Cyb3rhq Kibana plugin.](https://documentation.wazuh.com/current/development/packaging/generate-cyb3rhq-kibana-app.html)
+Please, visit the following link for the full Cyb3rhq Kibana plugin packages building documentation: [Generate Cyb3rhq Kibana plugin.](https://cyb3rhq.github.io/documentation/current/development/packaging/generate-cyb3rhq-kibana-app.html)
 
 ## More Packages
 

@@ -1,6 +1,6 @@
 [Unit]
 Description=Cyb3rhq-indexer
-Documentation=https://documentation.wazuh.com
+Documentation=https://cyb3rhq.github.io/documentation
 Wants=network-online.target
 After=network-online.target
 

@@ -4,7 +4,7 @@ In this repository, you can find the necessary tools to build a Cyb3rhq package 
 
 ## Building DEB packages
 
-Please, visit the following link for the full DEB packages building documentation: [Generate Cyb3rhq Debian packages.](https://documentation.wazuh.com/current/development/packaging/generate-deb-package.html)
+Please, visit the following link for the full DEB packages building documentation: [Generate Cyb3rhq Debian packages.](https://cyb3rhq.github.io/documentation/current/development/packaging/generate-deb-package.html)
 
 ## More Packages
 

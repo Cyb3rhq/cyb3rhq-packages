@@ -4,7 +4,7 @@ In this repository, you can find the necessary tools to build a Cyb3rhq package 
 
 ## Building macOS packages
 
-Please, visit the following link for the full macOS packages building documentation: [Generate Cyb3rhq OSX packages.](https://documentation.wazuh.com/current/development/packaging/generate-osx-package.html)
+Please, visit the following link for the full macOS packages building documentation: [Generate Cyb3rhq OSX packages.](https://cyb3rhq.github.io/documentation/current/development/packaging/generate-osx-package.html)
 
 ## More Packages
 
