@@ -4,7 +4,7 @@ In this repository, you can find the necessary tools to build a Cyb3rhq package 
 
 ## Building RPM packages
 
-Please, visit the following link for the full RPM packages building documentation: [Creating Cyb3rhq RPM packages.](https://documentation.wazuh.com/current/development/packaging/generate-rpm-package.html)
+Please, visit the following link for the full RPM packages building documentation: [Creating Cyb3rhq RPM packages.](https://cyb3rhq.github.io/documentation/current/development/packaging/generate-rpm-package.html)
 
 ## More Packages
 

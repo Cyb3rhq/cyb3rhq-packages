@@ -54,7 +54,7 @@ spec_files_dict = {
     r'Revision:\s*(\d+)':'Revision:     ' + str(args.revision),
     r'%changelog':'%changelog\n' 
         + (f"* {spec_date} support <info@wazuh.com> - {version}"
-        "\n- More info: https://documentation.wazuh.com/current/release-"
+        "\n- More info: https://cyb3rhq.github.io/documentation/current/release-"
         f"notes/release-{version.major}-{version.minor}-"
         f"{version.micro}.html")}
 
@@ -128,7 +128,7 @@ for changelog_file in changelog_files:
         install_type=re.search(r'(cyb3rhq-(agent|manager|indexer|dashboard))',
                                filedata).group(1)
         changelog_string=(f"{install_type} ({version}-RELEASE) stable; "
-            "urgency=low\n\n  * More info: https://documentation.wazuh.com/"
+            "urgency=low\n\n  * More info: https://cyb3rhq.github.io/documentation/"
             f"current/release-notes/release-{version.major}-{version.minor}-"
             f"{version.micro}.html\n\n -- "
             f"Cyb3rhq, Inc <info@wazuh.com>  {deb_changelog_date}\n\n")

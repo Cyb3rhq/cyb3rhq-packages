@@ -3,7 +3,7 @@ Cyb3rhq unattended installer - Development guide
 
 [![Slack](https://img.shields.io/badge/slack-join-blue.svg)](https://wazuh.com/community/join-us-on-slack/)
 [![Email](https://img.shields.io/badge/email-join-blue.svg)](https://groups.google.com/forum/#!forum/cyb3rhq)
-[![Documentation](https://img.shields.io/badge/docs-view-green.svg)](https://documentation.wazuh.com)
+[![Documentation](https://img.shields.io/badge/docs-view-green.svg)](https://cyb3rhq.github.io/documentation)
 [![Documentation](https://img.shields.io/badge/web-view-green.svg)](https://wazuh.com)
 
 # Development guide

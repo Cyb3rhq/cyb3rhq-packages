@@ -4,7 +4,7 @@ In this repository, you can find the necessary tools to build a Cyb3rhq msi pack
 
 ## Building Windows packages
 
-Please, visit the following link for the full Windows packages building documentation: [Generate Cyb3rhq Windows packages.](https://documentation.wazuh.com/current/development/packaging/generate-windows-package.html)
+Please, visit the following link for the full Windows packages building documentation: [Generate Cyb3rhq Windows packages.](https://cyb3rhq.github.io/documentation/current/development/packaging/generate-windows-package.html)
 
 ## More Packages
 

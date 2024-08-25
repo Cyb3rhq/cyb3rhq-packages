@@ -146,7 +146,7 @@ sed -i 's|opensearchDashboardsDocLink,surveyLink:surveyLink}|opensearchDashboard
 
 ### Opensearch Dashboards documentation
 sed -i 's|OpenSearch Dashboards documentation|Documentation|' ./src/core/target/public/core.entry.js
-sed -i 's|href:opensearchDashboardsDocLink,|href:"https://documentation.wazuh.com/'${cyb3rhq_minor}'", iconType:darkmode?"/ui/logos/icon_dark.svg":"/ui/logos/icon_light.svg",|' ./src/core/target/public/core.entry.js
+sed -i 's|href:opensearchDashboardsDocLink,|href:"https://cyb3rhq.github.io/documentation/'${cyb3rhq_minor}'", iconType:darkmode?"/ui/logos/icon_dark.svg":"/ui/logos/icon_light.svg",|' ./src/core/target/public/core.entry.js
 
 ## Help link - Ask OpenSearch
 sed -i 's|Ask OpenSearch|Ask Cyb3rhq|' ./src/core/target/public/core.entry.js

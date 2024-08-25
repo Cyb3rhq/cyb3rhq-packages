@@ -4,7 +4,7 @@ In this repository, you can find the necessary tools to build a WPK package.
 
 ## Building WPK packages
 
-Please, visit the following link for the full WPK packages building documentation: [Generate Cyb3rhq WPK packages automatically.](https://documentation.wazuh.com/current/development/packaging/generate-wpk-package.html)
+Please, visit the following link for the full WPK packages building documentation: [Generate Cyb3rhq WPK packages automatically.](https://cyb3rhq.github.io/documentation/current/development/packaging/generate-wpk-package.html)
 
 ## More Packages
 

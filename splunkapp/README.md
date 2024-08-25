@@ -4,7 +4,7 @@ In this repository, you can find the necessary tools to build a Cyb3rhq Splunk A
 
 ## Building Cyb3rhq Splunk app packages
 
-Please, visit the following link for the full Splunk App packages building documentation: [Generate Cyb3rhq Splunk App packages.](https://documentation.wazuh.com/current/development/packaging/generate-cyb3rhq-splunk-app.html)
+Please, visit the following link for the full Splunk App packages building documentation: [Generate Cyb3rhq Splunk App packages.](https://cyb3rhq.github.io/documentation/current/development/packaging/generate-cyb3rhq-splunk-app.html)
 
 ## More Packages
 
